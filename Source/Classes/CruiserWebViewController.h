@@ -1,57 +1,59 @@
 //
-//  DZNWebViewController.h
-//  DZNWebViewController
-//  https://github.com/dzenbot/DZNWebViewController
+//  CruiserWebViewController.h
+//  CruiserWebViewController
+//  https://github.com/dzenbot/CruiserWebViewController
 //
 //  Created by Ignacio Romero Zurbuchen on 10/25/13.
+//  Improved by Yuriy Pitomets on 23/01/2015
 //  Copyright (c) 2014 DZN Labs. All rights reserved.
+//  Copyright (c) 2015 Yuriy Pitomets. No rights reserved.
 //  Licence: MIT-Licence
 //
 
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
 
-#import "DZNWebView.h"
+#import "CruiserWebView.h"
 
 /**
  Types of supported navigation tools.
  */
-typedef NS_OPTIONS(NSUInteger, DZNWebNavigationTools) {
-    DZNWebNavigationToolAll = -1,
-    DZNWebNavigationToolNone = 0,
-    DZNWebNavigationToolBackward = (1 << 0),
-    DZNWebNavigationToolForward = (1 << 1),
-    DZNWebNavigationToolStopReload = (1 << 2),
+typedef NS_OPTIONS(NSUInteger, CruiserWebNavigationTools) {
+    CruiserWebNavigationToolAll = -1,
+    CruiserWebNavigationToolNone = 0,
+    CruiserWebNavigationToolBackward = (1 << 0),
+    CruiserWebNavigationToolForward = (1 << 1),
+    CruiserWebNavigationToolStopReload = (1 << 2),
 };
 
 /**
  Types of supported actions (i.e. Share & Copy link, Add to Reading List, Open in Safari/Chrome/Opera/Dolphin).
  */
-typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
-    DZNWebActionAll = -1,
-    DZNWebActionNone = 0,
-    DZNsupportedWebActionshareLink = (1 << 0),
-    DZNWebActionCopyLink = (1 << 1),
-    DZNWebActionReadLater = (1 << 2),
-    DZNWebActionOpenSafari = (1 << 3),
-    DZNWebActionOpenChrome = (1 << 4),
-    DZNWebActionOpenOperaMini = (1 << 5),
-    DZNWebActionOpenDolphin = (1 << 6),
+typedef NS_OPTIONS(NSUInteger, CruisersupportedWebActions) {
+    CruiserWebActionAll = -1,
+    CruiserWebActionNone = 0,
+    CruisersupportedWebActionshareLink = (1 << 0),
+    CruiserWebActionCopyLink = (1 << 1),
+    CruiserWebActionReadLater = (1 << 2),
+    CruiserWebActionOpenSafari = (1 << 3),
+    CruiserWebActionOpenChrome = (1 << 4),
+    CruiserWebActionOpenOperaMini = (1 << 5),
+    CruiserWebActionOpenDolphin = (1 << 6),
 };
 
 /**
  A very simple web browser with useful navigation and tooling features.
  */
-@interface DZNWebViewController : UIViewController <DZNNavigationDelegate, WKUIDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface CruiserWebViewController : UIViewController <CruiserNavigationDelegate, WKUIDelegate, UITableViewDataSource, UITableViewDelegate>
 
 /** The web view that the controller manages. */
-@property (nonatomic, strong) DZNWebView *webView;
+@property (nonatomic, strong) CruiserWebView *webView;
 /** The URL identifying the location of the content to load. */
 @property (nonatomic, readwrite) NSURL *URL;
 /** The supported navigation tool bar items. Default is All. */
-@property (nonatomic, readwrite) DZNWebNavigationTools supportedWebNavigationTools;
+@property (nonatomic, readwrite) CruiserWebNavigationTools supportedWebNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is All. */
-@property (nonatomic, readwrite) DZNsupportedWebActions supportedWebActions;
+@property (nonatomic, readwrite) CruisersupportedWebActions supportedWebActions;
 /** Yes if a progress bar indicates the . Default is YES. */
 @property (nonatomic) BOOL showLoadingProgress;
 /** YES if long pressing the backward and forward buttons the navigation history is displayed. Default is YES. */
@@ -65,7 +67,7 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 
 /**
  Initializes and returns a newly created webview controller with an initial HTTP URL to be requested as soon as the view appears.
- 
+
  @param URL The HTTP URL to be requested.
  @returns The initialized webview controller.
  */
@@ -73,7 +75,7 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 
 /**
  Initializes and returns a newly created webview controller for local HTML navigation.
- 
+
  @param URL The file URL of the main html.
  @returns The initialized webview controller.
  */
@@ -81,7 +83,7 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 
 /**
  Starts loading a new request. Useful to programatically update the web content.
- 
+
  @param URL The HTTP or file URL to be requested.
  */
 - (void)loadURL:(NSURL *)URL NS_REQUIRES_SUPER;
@@ -91,15 +93,15 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 /// @name Appearance customisation
 ///------------------------------------------------
 
-// The back button displayed on the tool bar (requieres DZNWebNavigationToolBackward)
+// The back button displayed on the tool bar (requieres CruiserWebNavigationToolBackward)
 @property (nonatomic, strong) UIImage *backwardButtonImage;
-// The forward button displayed on the tool bar (requieres DZNWebNavigationToolForward)
+// The forward button displayed on the tool bar (requieres CruiserWebNavigationToolForward)
 @property (nonatomic, strong) UIImage *forwardButtonImage;
-// The stop button displayed on the tool bar (requieres DZNWebNavigationToolStopReload)
+// The stop button displayed on the tool bar (requieres CruiserWebNavigationToolStopReload)
 @property (nonatomic, strong) UIImage *stopButtonImage;
-// The reload button displayed on the tool bar (requieres DZNWebNavigationToolStopReload)
+// The reload button displayed on the tool bar (requieres CruiserWebNavigationToolStopReload)
 @property (nonatomic, strong) UIImage *reloadButtonImage;
-// The action button displayed on the navigation bar (requieres at least 1 DZNsupportedWebActions value)
+// The action button displayed on the navigation bar (requieres at least 1 CruisersupportedWebActions value)
 @property (nonatomic, strong) UIImage *actionButtonImage;
 
 
@@ -107,15 +109,15 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 /// @name Delegate Methods Requiring Super
 ///------------------------------------------------
 
-// DZNNavigationDelegate
-- (void)webView:(DZNWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation NS_REQUIRES_SUPER;
-- (void)webView:(DZNWebView *)webView didCommitNavigation:(WKNavigation *)navigation NS_REQUIRES_SUPER;
-- (void)webView:(DZNWebView *)webView didUpdateProgress:(CGFloat)progress NS_REQUIRES_SUPER;
-- (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation NS_REQUIRES_SUPER;
-- (void)webView:(DZNWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error NS_REQUIRES_SUPER;
+// CruiserNavigationDelegate
+- (void)webView:(CruiserWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation NS_REQUIRES_SUPER;
+- (void)webView:(CruiserWebView *)webView didCommitNavigation:(WKNavigation *)navigation NS_REQUIRES_SUPER;
+- (void)webView:(CruiserWebView *)webView didUpdateProgress:(CGFloat)progress NS_REQUIRES_SUPER;
+- (void)webView:(CruiserWebView *)webView didFinishNavigation:(WKNavigation *)navigation NS_REQUIRES_SUPER;
+- (void)webView:(CruiserWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error NS_REQUIRES_SUPER;
 
 // WKUIDelegate
-- (DZNWebView *)webView:(DZNWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures NS_REQUIRES_SUPER;
+- (CruiserWebView *)webView:(CruiserWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures NS_REQUIRES_SUPER;
 
 // UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView NS_REQUIRES_SUPER;

@@ -1,14 +1,14 @@
 PODS:
-  - DZNWebViewController (3.0)
+  - CruiserWebViewController (4.0)
 
 DEPENDENCIES:
-  - DZNWebViewController (from `../../DZNWebViewController.podspec`)
+  - CruiserWebViewController (from `../../CruiserWebViewController.podspec`)
 
 EXTERNAL SOURCES:
-  DZNWebViewController:
-    :path: ../../DZNWebViewController.podspec
+  CruiserWebViewController:
+    :path: ../../CruiserWebViewController.podspec
 
 SPEC CHECKSUMS:
-  DZNWebViewController: 50271156811fd1a6dbde7ddf67cb326bd85c3282
+  CruiserWebViewController: 01746e862f99a08fd9119627b90a9e2506d30dd0
 
 COCOAPODS: 0.35.0

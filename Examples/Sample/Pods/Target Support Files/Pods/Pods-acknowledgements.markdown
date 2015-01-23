@@ -1,11 +1,12 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
-## DZNWebViewController
+## CruiserWebViewController
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Ignacio Romero Zurbuchen, DZN Labs, iromero@dzen.cl
+Based on DZNWebViewController by (c) 2014 Ignacio Romero Zurbuchen, DZN Labs, iromero@dzen.cl
+Copyright (c) 2015 Yuriy Pitomets, pitometsu@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

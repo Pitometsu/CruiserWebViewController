@@ -2,4 +2,4 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 
-pod 'DZNWebViewController', :path => '../../DZNWebViewController.podspec'
+pod 'CruiserWebViewController', :path => '../../CruiserWebViewController.podspec'

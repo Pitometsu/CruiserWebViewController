@@ -26,29 +26,14 @@
 		4FB8460D18E50C450056BDFB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FB8460B18E50C450056BDFB /* InfoPlist.strings */; };
 		4FB8460F18E50C450056BDFB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB8460E18E50C450056BDFB /* main.m */; };
 		4FB8461318E50C450056BDFB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB8461218E50C450056BDFB /* AppDelegate.m */; };
-		4FB8461C18E50C450056BDFB /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8461B18E50C450056BDFB /* XCTest.framework */; };
-		4FB8461D18E50C450056BDFB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460218E50C450056BDFB /* Foundation.framework */; };
-		4FB8461E18E50C450056BDFB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460618E50C450056BDFB /* UIKit.framework */; };
-		4FB8462618E50C450056BDFB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FB8462418E50C450056BDFB /* InfoPlist.strings */; };
-		4FB8462818E50C450056BDFB /* SampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB8462718E50C450056BDFB /* SampleTests.m */; };
 		4FC763F118E725C60009F375 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763EE18E725C60009F375 /* Default-568h@2x.png */; };
 		4FC763F218E725C60009F375 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763EF18E725C60009F375 /* Default.png */; };
 		4FC763F318E725C60009F375 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763F018E725C60009F375 /* Default@2x.png */; };
 		AA22BA647F7D4AA39B479ABC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9934BD31402B4CBE9A91C229 /* libPods.a */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		4FB8461F18E50C450056BDFB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4FB845F718E50C450056BDFB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4FB845FE18E50C450056BDFB;
-			remoteInfo = Sample;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		4F3041DB1A1EFA8900F702A5 /* DZNWebViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = DZNWebViewController.podspec; path = ../../DZNWebViewController.podspec; sourceTree = "<group>"; };
+		4F3041DB1A1EFA8900F702A5 /* CruiserWebViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = CruiserWebViewController.podspec; path = ../../CruiserWebViewController.podspec; sourceTree = "<group>"; };
 		4F5F8A0C1A224CC400C95C4C /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		4F6A375A1A20E09100323282 /* NSHipster.com.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = NSHipster.com.html; sourceTree = "<group>"; };
 		4F6A375C1A20E09100323282 /* analytics.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = analytics.js; sourceTree = "<group>"; };
@@ -72,11 +57,7 @@
 		4FB8461018E50C450056BDFB /* Sample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sample-Prefix.pch"; sourceTree = "<group>"; };
 		4FB8461118E50C450056BDFB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4FB8461218E50C450056BDFB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		4FB8461A18E50C450056BDFB /* SampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FB8461B18E50C450056BDFB /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		4FB8462318E50C450056BDFB /* SampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleTests-Info.plist"; sourceTree = "<group>"; };
-		4FB8462518E50C450056BDFB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		4FB8462718E50C450056BDFB /* SampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleTests.m; sourceTree = "<group>"; };
 		4FC763EE18E725C60009F375 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		4FC763EF18E725C60009F375 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		4FC763F018E725C60009F375 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -97,23 +78,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4FB8461718E50C450056BDFB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4FB8461C18E50C450056BDFB /* XCTest.framework in Frameworks */,
-				4FB8461E18E50C450056BDFB /* UIKit.framework in Frameworks */,
-				4FB8461D18E50C450056BDFB /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2CD7BE64F3B51825C90A986D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				4F3041DB1A1EFA8900F702A5 /* DZNWebViewController.podspec */,
+				4F3041DB1A1EFA8900F702A5 /* CruiserWebViewController.podspec */,
 				ED4997A7C5F4D6AACC9BD7B0 /* Pods.debug.xcconfig */,
 				84072172328E77E3D64B7C81 /* Pods.release.xcconfig */,
 			);
@@ -159,7 +130,6 @@
 			isa = PBXGroup;
 			children = (
 				4FB8460818E50C450056BDFB /* Sample */,
-				4FB8462118E50C450056BDFB /* SampleTests */,
 				4FB8460118E50C450056BDFB /* Frameworks */,
 				4FB8460018E50C450056BDFB /* Products */,
 				2CD7BE64F3B51825C90A986D /* Pods */,
@@ -170,7 +140,6 @@
 			isa = PBXGroup;
 			children = (
 				4FB845FF18E50C450056BDFB /* Sample.app */,
-				4FB8461A18E50C450056BDFB /* SampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -213,24 +182,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		4FB8462118E50C450056BDFB /* SampleTests */ = {
-			isa = PBXGroup;
-			children = (
-				4FB8462718E50C450056BDFB /* SampleTests.m */,
-				4FB8462218E50C450056BDFB /* Supporting Files */,
-			);
-			path = SampleTests;
-			sourceTree = "<group>";
-		};
-		4FB8462218E50C450056BDFB /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				4FB8462318E50C450056BDFB /* SampleTests-Info.plist */,
-				4FB8462418E50C450056BDFB /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -253,24 +204,6 @@
 			productReference = 4FB845FF18E50C450056BDFB /* Sample.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4FB8461918E50C450056BDFB /* SampleTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4FB8462E18E50C450056BDFB /* Build configuration list for PBXNativeTarget "SampleTests" */;
-			buildPhases = (
-				4FB8461618E50C450056BDFB /* Sources */,
-				4FB8461718E50C450056BDFB /* Frameworks */,
-				4FB8461818E50C450056BDFB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4FB8462018E50C450056BDFB /* PBXTargetDependency */,
-			);
-			name = SampleTests;
-			productName = SampleTests;
-			productReference = 4FB8461A18E50C450056BDFB /* SampleTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -279,11 +212,6 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "DZN Labs";
-				TargetAttributes = {
-					4FB8461918E50C450056BDFB = {
-						TestTargetID = 4FB845FE18E50C450056BDFB;
-					};
-				};
 			};
 			buildConfigurationList = 4FB845FA18E50C450056BDFB /* Build configuration list for PBXProject "Sample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -299,7 +227,6 @@
 			projectRoot = "";
 			targets = (
 				4FB845FE18E50C450056BDFB /* Sample */,
-				4FB8461918E50C450056BDFB /* SampleTests */,
 			);
 		};
 /* End PBXProject section */
@@ -326,14 +253,6 @@
 				4F6A37681A20E09100323282 /* analytics.js in Resources */,
 				4F6A376E1A20E09100323282 /* jquery.min.js in Resources */,
 				4F6A376D1A20E09100323282 /* embed.js in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FB8461818E50C450056BDFB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4FB8462618E50C450056BDFB /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,37 +301,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4FB8461618E50C450056BDFB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4FB8462818E50C450056BDFB /* SampleTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		4FB8462018E50C450056BDFB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4FB845FE18E50C450056BDFB /* Sample */;
-			targetProxy = 4FB8461F18E50C450056BDFB /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4FB8460B18E50C450056BDFB /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				4FB8460C18E50C450056BDFB /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		4FB8462418E50C450056BDFB /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4FB8462518E50C450056BDFB /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -522,46 +417,6 @@
 			};
 			name = Release;
 		};
-		4FB8462F18E50C450056BDFB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Sample.app/Sample";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Sample/Sample-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "SampleTests/SampleTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		4FB8463018E50C450056BDFB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Sample.app/Sample";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Sample/Sample-Prefix.pch";
-				INFOPLIST_FILE = "SampleTests/SampleTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -579,15 +434,6 @@
 			buildConfigurations = (
 				4FB8462C18E50C450056BDFB /* Debug */,
 				4FB8462D18E50C450056BDFB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4FB8462E18E50C450056BDFB /* Build configuration list for PBXNativeTarget "SampleTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4FB8462F18E50C450056BDFB /* Debug */,
-				4FB8463018E50C450056BDFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

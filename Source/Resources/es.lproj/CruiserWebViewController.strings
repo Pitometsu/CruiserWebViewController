@@ -1,0 +1,14 @@
+//
+//  CruiserWebViewController.strings
+//  CruiserWebViewController
+//  https://github.com/pitometsu/CruiserWebViewController
+//
+//  Created by Paul Dziwoki on 25/07/14.
+//  Improved by Yuriy Pitomets on 23/01/2015
+//  Copyright (c) 2014 DZN Labs. All rights reserved.
+//  Copyright (c) 2015 Yuriy Pitomets. No rights reserved.
+//  Licence: MIT-Licence
+//
+
+"Backward" = "Retroceder";
+"Forward" = "Avanzar";
