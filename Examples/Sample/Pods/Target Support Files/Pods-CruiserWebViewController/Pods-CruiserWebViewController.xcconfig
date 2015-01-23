@@ -1,0 +1,1 @@
+PODS_CRUISERWEBVIEWCONTROLLER_OTHER_LDFLAGS = -framework "UIKit" -framework "WebKit"

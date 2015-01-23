@@ -1,22 +1,24 @@
 //
-//  DZNWebViewController.m
-//  DZNWebViewController
-//  https://github.com/dzenbot/DZNWebViewController
+//  CruiserWebViewController.m
+//  CruiserWebViewController
+//  https://github.com/dzenbot/CruiserWebViewController
 //
 //  Created by Ignacio Romero Zurbuchen on 10/25/13.
+//  Improved by Yuriy Pitomets on 23/01/2015
 //  Copyright (c) 2014 DZN Labs. All rights reserved.
+//  Copyright (c) 2015 Yuriy Pitomets. No rights reserved.
 //  Licence: MIT-Licence
 //
 
-#import "DZNWebViewController.h"
-#import "DZNPolyActivity.h"
+#import "CruiserWebViewController.h"
+#import "CruiserPolyActivity.h"
 
-#define DZN_IS_IPAD [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad
-#define DZN_IS_LANDSCAPE ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
+#define Cruiser_IS_IPAD [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad
+#define Cruiser_IS_LANDSCAPE ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
 
-static char DZNWebViewControllerKVOContext = 0;
+static char CruiserWebViewControllerKVOContext = 0;
 
-@interface DZNWebViewController ()
+@interface CruiserWebViewController ()
 
 @property (nonatomic, strong) UIBarButtonItem *backwardBarItem;
 @property (nonatomic, strong) UIBarButtonItem *forwardBarItem;
@@ -33,7 +35,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 @end
 
-@implementation DZNWebViewController
+@implementation CruiserWebViewController
 @synthesize URL = _URL;
 
 - (instancetype)init
@@ -68,8 +70,8 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)commonInit
 {
-    self.supportedWebNavigationTools = DZNWebNavigationToolAll;
-    self.supportedWebActions = DZNWebActionAll;
+    self.supportedWebNavigationTools = CruiserWebNavigationToolAll;
+    self.supportedWebActions = CruiserWebActionAll;
     self.showLoadingProgress = YES;
     self.hideBarsWithGestures = YES;
     self.allowHistory = YES;
@@ -81,7 +83,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)loadView
 {
     [super loadView];
-    
+
     self.view = self.webView;
     self.automaticallyAdjustsScrollViewInsets = YES;
 }
@@ -94,14 +96,14 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     [UIView performWithoutAnimation:^{
         static dispatch_once_t willAppearConfig;
         dispatch_once(&willAppearConfig, ^{
             [self configureToolBars];
         });
     }];
-    
+
     if (!self.webView.URL) {
         [self loadURL:self.URL];
     }
@@ -110,7 +112,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
     static dispatch_once_t didAppearConfig;
     dispatch_once(&didAppearConfig, ^{
         [self configureBarItemsGestures];
@@ -120,31 +122,31 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
-    
+
     [self clearProgressViewAnimated:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-    
+
     [self.webView stopLoading];
 }
 
 
 #pragma mark - Getter methods
 
-- (DZNWebView *)webView
+- (CruiserWebView *)webView
 {
     if (!_webView)
     {
-        DZNWebView *webView = [[DZNWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
+        CruiserWebView *webView = [[CruiserWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
         webView.backgroundColor = [UIColor whiteColor];
         webView.allowsBackForwardNavigationGestures = YES;
         webView.UIDelegate = self;
         webView.navDelegate = self;
         webView.scrollView.delegate = self;
-        
+
         _webView = webView;
     }
     return _webView;
@@ -156,13 +158,13 @@ static char DZNWebViewControllerKVOContext = 0;
     {
         CGFloat lineHeight = 2.0f;
         CGRect frame = CGRectMake(0, CGRectGetHeight(self.navigationBar.bounds) - lineHeight, CGRectGetWidth(self.navigationBar.bounds), lineHeight);
-        
+
         UIProgressView *progressView = [[UIProgressView alloc] initWithFrame:frame];
         progressView.trackTintColor = [UIColor clearColor];
         progressView.alpha = 0.0f;
-        
+
         [self.navigationBar addSubview:progressView];
-        
+
         _progressView = progressView;
     }
     return _progressView;
@@ -173,7 +175,7 @@ static char DZNWebViewControllerKVOContext = 0;
     if (!_backwardBarItem)
     {
         _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[self backwardButtonImage] landscapeImagePhone:nil style:0 target:self action:@selector(goBackward:)];
-        _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
+        _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"CruiserWebViewController", @"Accessibility label button title");
         _backwardBarItem.enabled = NO;
     }
     return _backwardBarItem;
@@ -185,7 +187,7 @@ static char DZNWebViewControllerKVOContext = 0;
     {
         _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[self forwardButtonImage] landscapeImagePhone:nil style:0 target:self action:@selector(goForward:)];
         _forwardBarItem.landscapeImagePhone = nil;
-        _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"DZNWebViewController", @"Accessibility label button title");
+        _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"CruiserWebViewController", @"Accessibility label button title");
         _forwardBarItem.enabled = NO;
     }
     return _forwardBarItem;
@@ -214,40 +216,40 @@ static char DZNWebViewControllerKVOContext = 0;
 - (NSArray *)navigationToolItems
 {
     NSMutableArray *items = [NSMutableArray new];
-    
+
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
-    
-    if ((self.supportedWebNavigationTools & DZNWebNavigationToolBackward) > 0 || self.supportsAllNavigationTools) {
+
+    if ((self.supportedWebNavigationTools & CruiserWebNavigationToolBackward) > 0 || self.supportsAllNavigationTools) {
         [items addObject:self.backwardBarItem];
     }
-    
-    if ((self.supportedWebNavigationTools & DZNWebNavigationToolForward) > 0 || self.supportsAllNavigationTools) {
-        if (!DZN_IS_IPAD) [items addObject:flexibleSpace];
+
+    if ((self.supportedWebNavigationTools & CruiserWebNavigationToolForward) > 0 || self.supportsAllNavigationTools) {
+        if (!Cruiser_IS_IPAD) [items addObject:flexibleSpace];
         [items addObject:self.forwardBarItem];
     }
-    
-    if ((self.supportedWebNavigationTools & DZNWebNavigationToolStopReload) > 0 || self.supportsAllNavigationTools) {
-        if (!DZN_IS_IPAD) [items addObject:flexibleSpace];
+
+    if ((self.supportedWebNavigationTools & CruiserWebNavigationToolStopReload) > 0 || self.supportsAllNavigationTools) {
+        if (!Cruiser_IS_IPAD) [items addObject:flexibleSpace];
         [items addObject:self.stateBarItem];
     }
-    
+
     if (self.supportedWebActions > 0) {
-        if (!DZN_IS_IPAD) [items addObject:flexibleSpace];
+        if (!Cruiser_IS_IPAD) [items addObject:flexibleSpace];
         [items addObject:self.actionBarItem];
     }
-    
+
     return items;
 }
 
 - (BOOL)supportsAllNavigationTools
 {
-    return (_supportedWebNavigationTools == DZNWebNavigationToolAll) ? YES : NO;
+    return (_supportedWebNavigationTools == CruiserWebNavigationToolAll) ? YES : NO;
 }
 
 - (UIImage *)backwardButtonImage
 {
     if (!_backwardButtonImage) {
-        _backwardButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_backward"];
+        _backwardButtonImage = [UIImage imageNamed:@"cruiser_icn_toolbar_backward"];
     }
     return _backwardButtonImage;
 }
@@ -255,7 +257,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)forwardButtonImage
 {
     if (!_forwardButtonImage) {
-        _forwardButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_forward"];
+        _forwardButtonImage = [UIImage imageNamed:@"cruiser_icn_toolbar_forward"];
     }
     return _forwardButtonImage;
 }
@@ -263,7 +265,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)reloadButtonImage
 {
     if (!_reloadButtonImage) {
-        _reloadButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_reload"];
+        _reloadButtonImage = [UIImage imageNamed:@"cruiser_icn_toolbar_reload"];
     }
     return _reloadButtonImage;
 }
@@ -271,7 +273,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)stopButtonImage
 {
     if (!_stopButtonImage) {
-        _stopButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_stop"];
+        _stopButtonImage = [UIImage imageNamed:@"cruiser_icn_toolbar_stop"];
     }
     return _stopButtonImage;
 }
@@ -279,7 +281,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)actionButtonImage
 {
     if (!_actionButtonImage) {
-        _actionButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_action"];
+        _actionButtonImage = [UIImage imageNamed:@"cruiser_icn_toolbar_action"];
     }
     return _actionButtonImage;
 }
@@ -287,34 +289,34 @@ static char DZNWebViewControllerKVOContext = 0;
 - (NSArray *)applicationActivitiesForItem:(id)item
 {
     NSMutableArray *activities = [NSMutableArray new];
-    
+
     if ([item isKindOfClass:[UIImage class]]) {
         return activities;
     }
-    
-    if ((_supportedWebActions & DZNWebActionCopyLink) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeLink]];
+
+    if ((_supportedWebActions & CruiserWebActionCopyLink) > 0 || self.supportsAllActions) {
+        [activities addObject:[CruiserPolyActivity activityWithType:CruiserPolyActivityTypeLink]];
     }
-    if ((_supportedWebActions & DZNWebActionOpenSafari) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeSafari]];
+    if ((_supportedWebActions & CruiserWebActionOpenSafari) > 0 || self.supportsAllActions) {
+        [activities addObject:[CruiserPolyActivity activityWithType:CruiserPolyActivityTypeSafari]];
     }
-    if ((_supportedWebActions & DZNWebActionOpenChrome) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeChrome]];
+    if ((_supportedWebActions & CruiserWebActionOpenChrome) > 0 || self.supportsAllActions) {
+        [activities addObject:[CruiserPolyActivity activityWithType:CruiserPolyActivityTypeChrome]];
     }
-    if ((_supportedWebActions & DZNWebActionOpenOperaMini) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeOpera]];
+    if ((_supportedWebActions & CruiserWebActionOpenOperaMini) > 0 || self.supportsAllActions) {
+        [activities addObject:[CruiserPolyActivity activityWithType:CruiserPolyActivityTypeOpera]];
     }
-    if ((_supportedWebActions & DZNWebActionOpenDolphin) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeDolphin]];
+    if ((_supportedWebActions & CruiserWebActionOpenDolphin) > 0 || self.supportsAllActions) {
+        [activities addObject:[CruiserPolyActivity activityWithType:CruiserPolyActivityTypeDolphin]];
     }
-    
+
     return activities;
 }
 
 - (NSArray *)excludedActivityTypesForItem:(id)item
 {
     NSMutableArray *types = [NSMutableArray new];
-    
+
     if (![item isKindOfClass:[UIImage class]]) {
         [types addObjectsFromArray:@[UIActivityTypeCopyToPasteboard,
                                      UIActivityTypeSaveToCameraRoll,
@@ -322,27 +324,27 @@ static char DZNWebViewControllerKVOContext = 0;
                                      UIActivityTypePrint,
                                      UIActivityTypeAssignToContact]];
     }
-    
+
     if (self.supportsAllActions) {
         return types;
     }
-    
-    if ((_supportedWebActions & DZNsupportedWebActionshareLink) == 0) {
+
+    if ((_supportedWebActions & CruisersupportedWebActionshareLink) == 0) {
         [types addObjectsFromArray:@[UIActivityTypeMail, UIActivityTypeMessage,
                                      UIActivityTypePostToFacebook, UIActivityTypePostToTwitter,
                                      UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo,
                                      UIActivityTypeAirDrop]];
     }
-    if ((_supportedWebActions & DZNWebActionReadLater) == 0 && [item isKindOfClass:[UIImage class]]) {
+    if ((_supportedWebActions & CruiserWebActionReadLater) == 0 && [item isKindOfClass:[UIImage class]]) {
         [types addObject:UIActivityTypeAddToReadingList];
     }
-    
+
     return types;
 }
 
 - (BOOL)supportsAllActions
 {
-    return (_supportedWebActions == DZNWebActionAll) ? YES : NO;
+    return (_supportedWebActions == CruiserWebActionAll) ? YES : NO;
 }
 
 
@@ -353,20 +355,20 @@ static char DZNWebViewControllerKVOContext = 0;
     if ([self.URL isEqual:URL]) {
         return;
     }
-    
+
     if (self.isViewLoaded) {
         [self loadURL:URL];
     }
-    
+
     _URL = URL;
 }
 
 - (void)setTitle:(NSString *)title
 {
     NSString *url = self.webView.URL.absoluteString;
-    
+
     UILabel *label = (UILabel *)self.navigationItem.titleView;
-    
+
     if (!label || ![label isKindOfClass:[UILabel class]]) {
         label = [UILabel new];
         label.numberOfLines = 2;
@@ -374,38 +376,38 @@ static char DZNWebViewControllerKVOContext = 0;
         label.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         self.navigationItem.titleView = label;
     }
-    
+
     if (title.length == 0) {
         label.attributedText = nil;
         return;
     }
-    
+
     UIFont *titleFont = [UIFont boldSystemFontOfSize:12.0];
     UIFont *urlFont = [UIFont systemFontOfSize:10.0];
     UIColor *textColor = [UIColor blackColor];
-    
+
     if (self.navigationBar.titleTextAttributes) {
         titleFont = self.navigationBar.titleTextAttributes[NSFontAttributeName];
         urlFont = [UIFont fontWithName:titleFont.fontName size:titleFont.pointSize-2.0];
         textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName];
     }
-    
+
     NSMutableString *text = [NSMutableString stringWithString:title];
-    
+
     if (url.length > 0) {
         [text appendFormat:@"\n%@", url];
     }
-    
+
     NSDictionary *attributes = @{NSFontAttributeName: titleFont, NSForegroundColorAttributeName: textColor};
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:attributes];
-    
+
     if (url.length > 0) {
         [attributedString addAttribute:NSFontAttributeName value:urlFont range:[text rangeOfString:url]];
     }
-    
+
     label.attributedText = attributedString;
     [label sizeToFit];
-    
+
     CGRect frame = label.frame;
     frame.size.height = CGRectGetHeight(self.navigationController.navigationBar.frame);
     label.frame = frame;
@@ -418,22 +420,22 @@ static char DZNWebViewControllerKVOContext = 0;
         case NSURLErrorUnknown:
         case NSURLErrorCancelled:   return;
     }
-    
+
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    
+
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles: nil];
     [alert show];
 }
 
 
-#pragma mark - DZNWebViewController methods
+#pragma mark - CruiserWebViewController methods
 
 - (void)loadURL:(NSURL *)URL
 {
     if ([URL isFileURL]) {
         NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
         NSString *HTMLString = [[NSString alloc] initWithData:data encoding:NSStringEncodingConversionAllowLossy];
-        
+
         [self.webView loadHTMLString:HTMLString baseURL:nil];
     }
     else {
@@ -460,7 +462,7 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     if (self.presentedViewController) {
         [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
-            
+
             // The bar button item's gestures are invalidated after using them, so we must re-assign them.
             [self configureBarItemsGestures];
         }];
@@ -473,7 +475,7 @@ static char DZNWebViewControllerKVOContext = 0;
         return;
     }
 
-    [self presentHistoryControllerForTool:DZNWebNavigationToolBackward fromView:sender.view];
+    [self presentHistoryControllerForTool:CruiserWebNavigationToolBackward fromView:sender.view];
 }
 
 - (void)showForwardHistory:(UIGestureRecognizer *)sender
@@ -481,23 +483,23 @@ static char DZNWebViewControllerKVOContext = 0;
     if (!self.allowHistory || self.webView.backForwardList.forwardList.count == 0 || sender.state != UIGestureRecognizerStateBegan) {
         return;
     }
-    
-    [self presentHistoryControllerForTool:DZNWebNavigationToolForward fromView:sender.view];
+
+    [self presentHistoryControllerForTool:CruiserWebNavigationToolForward fromView:sender.view];
 }
 
-- (void)presentHistoryControllerForTool:(DZNWebNavigationTools)tool fromView:(UIView *)view
+- (void)presentHistoryControllerForTool:(CruiserWebNavigationTools)tool fromView:(UIView *)view
 {
     UITableViewController *controller = [UITableViewController new];
-    controller.title = NSLocalizedStringFromTable(@"History", @"DZNWebViewController", nil);
+    controller.title = NSLocalizedStringFromTable(@"History", @"CruiserWebViewController", nil);
     controller.tableView.delegate = self;
     controller.tableView.dataSource = self;
     controller.tableView.tag = tool;
     controller.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissHistoryController)];
-    
+
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-    UIView *bar = DZN_IS_IPAD ? self.navigationBar : self.toolbar;
-    
-    if (DZN_IS_IPAD) {
+    UIView *bar = Cruiser_IS_IPAD ? self.navigationBar : self.toolbar;
+
+    if (Cruiser_IS_IPAD) {
         UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
         [popover presentPopoverFromRect:view.frame inView:bar permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     }
@@ -508,28 +510,28 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)configureToolBars
 {
-    if (DZN_IS_IPAD) {
+    if (Cruiser_IS_IPAD) {
         self.navigationItem.rightBarButtonItems = [[[self navigationToolItems] reverseObjectEnumerator] allObjects];
     }
     else {
         [self setToolbarItems:[self navigationToolItems]];
     }
-    
+
     self.toolbar = self.navigationController.toolbar;
     self.navigationBar = self.navigationController.navigationBar;
     self.navigationBarSuperView = self.navigationBar.superview;
-    
+
     self.navigationController.hidesBarsOnSwipe = self.hideBarsWithGestures;
     self.navigationController.hidesBarsWhenKeyboardAppears = self.hideBarsWithGestures;
     self.navigationController.hidesBarsWhenVerticallyCompact = self.hideBarsWithGestures;
 
     if (self.hideBarsWithGestures) {
-        [self.navigationBar addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
-        [self.navigationBar addObserver:self forKeyPath:@"center" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
-        [self.navigationBar addObserver:self forKeyPath:@"alpha" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
+        [self.navigationBar addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:&CruiserWebViewControllerKVOContext];
+        [self.navigationBar addObserver:self forKeyPath:@"center" options:NSKeyValueObservingOptionNew context:&CruiserWebViewControllerKVOContext];
+        [self.navigationBar addObserver:self forKeyPath:@"alpha" options:NSKeyValueObservingOptionNew context:&CruiserWebViewControllerKVOContext];
     }
 
-    if (!DZN_IS_IPAD && self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
+    if (!Cruiser_IS_IPAD && self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
         [self.navigationController setToolbarHidden:NO];
     }
 }
@@ -544,7 +546,7 @@ static char DZNWebViewControllerKVOContext = 0;
         }
         [backwardButton addGestureRecognizer:self.backwardLongPress];
     }
-    
+
     UIView *forwardBarButton= [self.forwardBarItem valueForKey:@"view"];
     if (forwardBarButton.gestureRecognizers.count == 0) {
         if (!_forwardLongPress) {
@@ -560,9 +562,9 @@ static char DZNWebViewControllerKVOContext = 0;
 
     self.backwardBarItem.enabled = [self.webView canGoBack];
     self.forwardBarItem.enabled = [self.webView canGoForward];
-    
+
     self.actionBarItem.enabled = !self.webView.isLoading;
-    
+
     [self updateStateBarItem];
 }
 
@@ -572,7 +574,7 @@ static char DZNWebViewControllerKVOContext = 0;
     self.stateBarItem.action = self.webView.isLoading ? @selector(stopLoading) : @selector(reload);
     self.stateBarItem.image = self.webView.isLoading ? self.stopButtonImage : self.reloadButtonImage;
     self.stateBarItem.landscapeImagePhone = nil;
-    self.stateBarItem.accessibilityLabel = NSLocalizedStringFromTable(self.webView.isLoading ? @"Stop" : @"Reload", @"DZNWebViewController", @"Accessibility label button title");
+    self.stateBarItem.accessibilityLabel = NSLocalizedStringFromTable(self.webView.isLoading ? @"Stop" : @"Reload", @"CruiserWebViewController", @"Accessibility label button title");
     self.stateBarItem.enabled = YES;
 }
 
@@ -581,7 +583,7 @@ static char DZNWebViewControllerKVOContext = 0;
     if (!self.webView.URL.absoluteString) {
         return;
     }
-    
+
     [self presentActivityControllerWithItem:self.webView.URL.absoluteString andTitle:self.webView.title sender:sender];
 }
 
@@ -590,18 +592,18 @@ static char DZNWebViewControllerKVOContext = 0;
     if (!item) {
         return;
     }
-    
+
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[title, item] applicationActivities:[self applicationActivitiesForItem:item]];
     controller.excludedActivityTypes = [self excludedActivityTypesForItem:item];
-    
+
     if (title) {
         [controller setValue:title forKey:@"subject"];
     }
-    
+
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         controller.popoverPresentationController.barButtonItem = sender;
     }
-    
+
     [self presentViewController:controller animated:YES completion:NULL];
 }
 
@@ -610,7 +612,7 @@ static char DZNWebViewControllerKVOContext = 0;
     if (!_progressView) {
         return;
     }
-    
+
     [UIView animateWithDuration:animated ? 0.25 : 0.0
                      animations:^{
                          self.progressView.alpha = 0;
@@ -628,29 +630,29 @@ static char DZNWebViewControllerKVOContext = 0;
 }
 
 
-#pragma mark - DZNNavigationDelegate methods
+#pragma mark - CruiserNavigationDelegate methods
 
-- (void)webView:(DZNWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
+- (void)webView:(CruiserWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
     [self updateStateBarItem];
 }
 
-- (void)webView:(DZNWebView *)webView didCommitNavigation:(WKNavigation *)navigation
+- (void)webView:(CruiserWebView *)webView didCommitNavigation:(WKNavigation *)navigation
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:[self.webView isLoading]];
 }
 
-- (void)webView:(DZNWebView *)webView didUpdateProgress:(CGFloat)progress
+- (void)webView:(CruiserWebView *)webView didUpdateProgress:(CGFloat)progress
 {
     if (!self.showLoadingProgress) {
         [self destroyProgressViewIfNeeded];
         return;
     }
-    
+
     if (self.progressView.alpha == 0 && progress > 0) {
-        
+
         self.progressView.progress = 0;
-        
+
         [UIView animateWithDuration:0.2 animations:^{
             self.progressView.alpha = 1.0;
         }];
@@ -663,34 +665,34 @@ static char DZNWebViewControllerKVOContext = 0;
             self.progressView.progress = 0;
         }];
     }
-    
+
     [self.progressView setProgress:progress animated:YES];
 }
 
-- (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+- (void)webView:(CruiserWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [self updateToolbarItems];
-    
+
     self.title = self.webView.title;
 }
 
-- (void)webView:(DZNWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
+- (void)webView:(CruiserWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     [self updateToolbarItems];
     [self setLoadingError:error];
-    
+
     self.title = nil;
 }
 
 
 #pragma mark - WKUIDelegate methods
 
-- (DZNWebView *)webView:(DZNWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+- (CruiserWebView *)webView:(CruiserWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
 {
     if (!navigationAction.targetFrame.isMainFrame) {
         [webView loadRequest:navigationAction.request];
     }
-    
+
     return nil;
 }
 
@@ -704,10 +706,10 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (tableView.tag == DZNWebNavigationToolBackward) {
+    if (tableView.tag == CruiserWebNavigationToolBackward) {
         return self.webView.backForwardList.backList.count;
     }
-    if (tableView.tag == DZNWebNavigationToolForward) {
+    if (tableView.tag == CruiserWebNavigationToolForward) {
         return self.webView.backForwardList.forwardList.count;
     }
     return 0;
@@ -717,20 +719,20 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
+
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
-    
+
     WKBackForwardListItem *item = nil;
-    
-    if (tableView.tag == DZNWebNavigationToolBackward) {
+
+    if (tableView.tag == CruiserWebNavigationToolBackward) {
         item = [self.webView.backForwardList.backList objectAtIndex:indexPath.row];
     }
-    if (tableView.tag == DZNWebNavigationToolForward) {
+    if (tableView.tag == CruiserWebNavigationToolForward) {
         item = [self.webView.backForwardList.forwardList objectAtIndex:indexPath.row];
     }
-    
+
     cell.textLabel.text = item.title;
     cell.detailTextLabel.text = [item.URL absoluteString];
 
@@ -748,16 +750,16 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     WKBackForwardListItem *item = nil;
-    
-    if (tableView.tag == DZNWebNavigationToolBackward) {
+
+    if (tableView.tag == CruiserWebNavigationToolBackward) {
         item = [self.webView.backForwardList.backList objectAtIndex:indexPath.row];
     }
-    if (tableView.tag == DZNWebNavigationToolForward) {
+    if (tableView.tag == CruiserWebNavigationToolForward) {
         item = [self.webView.backForwardList.forwardList objectAtIndex:indexPath.row];
     }
-    
+
     [self.webView goToBackForwardListItem:item];
-    
+
     [self dismissHistoryController];
 }
 
@@ -766,45 +768,45 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (context != &DZNWebViewControllerKVOContext) {
+    if (context != &CruiserWebViewControllerKVOContext) {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
         return;
     }
-    
+
     if ([object isEqual:self.navigationBar]) {
-        
+
         // Skips for landscape orientation, since there is no status bar visible on iPhone landscape
-        if (DZN_IS_LANDSCAPE) {
+        if (Cruiser_IS_LANDSCAPE) {
             return;
         }
-        
+
         id new = change[NSKeyValueChangeNewKey];
-        
+
         if ([keyPath isEqualToString:@"hidden"] && [new boolValue] && self.navigationBar.center.y >= -2.0) {
-            
+
             self.navigationBar.hidden = NO;
-            
+
             if (!self.navigationBar.superview) {
                 [self.navigationBarSuperView addSubview:self.navigationBar];
             }
         }
-        
+
         if ([keyPath isEqualToString:@"center"]) {
-            
+
             CGPoint center = [new CGPointValue];
-            
+
             if (center.y < -2.0) {
                 center.y = -2.0;
                 self.navigationBar.center = center;
-                
-                [UIView beginAnimations:@"DZNNavigationBarAnimation" context:nil];
-                
+
+                [UIView beginAnimations:@"CruiserNavigationBarAnimation" context:nil];
+
                 for (UIView *subview in self.navigationBar.subviews) {
                     if (subview != self.navigationBar.subviews[0]) {
                         subview.alpha = 0.0;
                     }
                 }
-                
+
                 [UIView commitAnimations];
             }
         }
@@ -839,19 +841,19 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)dealloc
 {
-    [self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
-    [self.navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
-    [self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
-    
+    [self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&CruiserWebViewControllerKVOContext];
+    [self.navigationBar removeObserver:self forKeyPath:@"center" context:&CruiserWebViewControllerKVOContext];
+    [self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&CruiserWebViewControllerKVOContext];
+
     _backwardBarItem = nil;
     _forwardBarItem = nil;
     _stateBarItem = nil;
     _actionBarItem = nil;
     _progressView = nil;
-    
+
     _backwardLongPress = nil;
     _forwardLongPress = nil;
-    
+
     _webView.navDelegate = nil;
     _webView.UIDelegate = nil;
     _webView = nil;

@@ -6,9 +6,9 @@
 // project.
 
 
-// DZNWebViewController
-#define COCOAPODS_POD_AVAILABLE_DZNWebViewController
-#define COCOAPODS_VERSION_MAJOR_DZNWebViewController 3
-#define COCOAPODS_VERSION_MINOR_DZNWebViewController 0
-#define COCOAPODS_VERSION_PATCH_DZNWebViewController 0
+// CruiserWebViewController
+#define COCOAPODS_POD_AVAILABLE_CruiserWebViewController
+#define COCOAPODS_VERSION_MAJOR_CruiserWebViewController 4
+#define COCOAPODS_VERSION_MINOR_CruiserWebViewController 0
+#define COCOAPODS_VERSION_PATCH_CruiserWebViewController 0
 
