@@ -1,7 +1,19 @@
-CruiserWebViewController 4.0
-================
+CruiserWebViewController 4.0 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
+============================
+
+[![Payoneer donate button](https://img.shields.io/badge/payoneer-donate-yellow.svg)](https://load.payoneer.com/LoadToPage.aspx?email=pitometsu@gmail.com)
 [![Pod Version](http://img.shields.io/cocoapods/v/CruiserWebViewController.svg)](https://cocoadocs.org/docsets/CruiserWebViewController)
-[![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
+[![Pod Platform](http://img.shields.io/cocoapods/p/CruiserWebViewController.svg?style=flat)](http://cocoadocs.org/docsets/CruiserWebViewController/)
+[![Pod License](http://img.shields.io/cocoapods/l/CruiserWebViewController.svg?style=flat)](https://github.com/Pitometsu/CruiserWebViewController/blob/master/LICENSE)
+[![Dependency Status](https://www.versioneye.com/objective-c/cruiserwebviewcontroller/4.0/badge.svg?style=flat)](https://www.versioneye.com/objective-c/cruiserwebviewcontroller)
+[![Reference Status](https://www.versioneye.com/objective-c/cruiserwebviewcontroller/reference_badge.svg?style=flat)](https://www.versioneye.com/objective-c/cruiserwebviewcontroller/references)
+
+[![Build Status](http://img.shields.io/travis/Pitometsu/CruiserWebViewController/master.svg?style=flat)](https://travis-ci.org/Pitometsu/CruiserWebViewController)
+[![Coverage Status](https://coveralls.io/repos/pitometsu/CruiserWebViewController/badge.png?branch=master)](https://coveralls.io/r/pitometsu/CruiserWebViewController?branch=master)
+[![Codacy Badge](https://www.codacy.com/project/badge/25cb5d1410c7497cb057d887d1f3ea23)](https://www.codacy.com/public/Pitometsu/CruiserWebViewController.git)
+[![Code Climate](https://codeclimate.com/github/Pitometsu/CruiserWebViewController/badges/gpa.svg)](https://codeclimate.com/github/Pitometsu/CruiserWebViewController)
+![Issue](http://issuestats.com/github/pitometsu/CruiserWebViewController/badge/issue)
+
 
 iOS view controller component.  
 Yet another one WebKit browser controller with enhanced navigation and additional controls.  
