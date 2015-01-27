@@ -19,32 +19,38 @@
  Types of supported navigation tools.
  */
 typedef NS_OPTIONS(NSUInteger, CruiserWebNavigationTools) {
-    CruiserWebNavigationToolAll = -1,
-    CruiserWebNavigationToolNone = 0,
-    CruiserWebNavigationToolBackward = (1 << 0),
-    CruiserWebNavigationToolForward = (1 << 1),
-    CruiserWebNavigationToolStopReload = (1 << 2),
+    CruiserWebNavigationToolAll      = -1,
+    CruiserWebNavigationToolNone     = 0,
+    CruiserWebNavigationToolBackward = 1 << 0,
+    CruiserWebNavigationToolForward  = 1 << 1,
+    CruiserWebNavigationToolPin      = 1 << 2,
+    CruiserWebNavigationToolDown     = 1 << 3,
+    CruiserWebNavigationToolUp       = 1 << 4
 };
 
 /**
  Types of supported actions (i.e. Share & Copy link, Add to Reading List, Open in Safari/Chrome/Opera/Dolphin).
  */
 typedef NS_OPTIONS(NSUInteger, CruisersupportedWebActions) {
-    CruiserWebActionAll = -1,
-    CruiserWebActionNone = 0,
-    CruisersupportedWebActionshareLink = (1 << 0),
-    CruiserWebActionCopyLink = (1 << 1),
-    CruiserWebActionReadLater = (1 << 2),
-    CruiserWebActionOpenSafari = (1 << 3),
-    CruiserWebActionOpenChrome = (1 << 4),
-    CruiserWebActionOpenOperaMini = (1 << 5),
-    CruiserWebActionOpenDolphin = (1 << 6),
+    CruiserWebActionAll                = -1,
+    CruiserWebActionNone               = 0,
+    CruisersupportedWebActionshareLink = 1 << 0,
+    CruiserWebActionCopyLink           = 1 << 1,
+    CruiserWebActionReadLater          = 1 << 2,
+    CruiserWebActionOpenSafari         = 1 << 3,
+    CruiserWebActionOpenChrome         = 1 << 4,
+    CruiserWebActionOpenOperaMini      = 1 << 5,
+    CruiserWebActionOpenDolphin        = 1 << 6
 };
 
 /**
  A very simple web browser with useful navigation and tooling features.
  */
-@interface CruiserWebViewController : UIViewController <CruiserNavigationDelegate, WKUIDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface CruiserWebViewController : UIViewController <CruiserNavigationDelegate,
+                                                        WKUIDelegate,
+                                                        UITableViewDataSource,
+                                                        UITableViewDelegate,
+                                                        UITextFieldDelegate>
 
 /** The web view that the controller manages. */
 @property (nonatomic, strong) CruiserWebView *webView;
@@ -90,6 +96,13 @@ typedef NS_OPTIONS(NSUInteger, CruisersupportedWebActions) {
 
 
 ///------------------------------------------------
+/// @name UI outlets
+///------------------------------------------------
+
+@property (nonatomic, weak) IBOutlet UITextField *addressField;
+
+
+///------------------------------------------------
 /// @name Appearance customisation
 ///------------------------------------------------
 
@@ -97,12 +110,29 @@ typedef NS_OPTIONS(NSUInteger, CruisersupportedWebActions) {
 @property (nonatomic, strong) UIImage *backwardButtonImage;
 // The forward button displayed on the tool bar (requieres CruiserWebNavigationToolForward)
 @property (nonatomic, strong) UIImage *forwardButtonImage;
-// The stop button displayed on the tool bar (requieres CruiserWebNavigationToolStopReload)
-@property (nonatomic, strong) UIImage *stopButtonImage;
-// The reload button displayed on the tool bar (requieres CruiserWebNavigationToolStopReload)
-@property (nonatomic, strong) UIImage *reloadButtonImage;
+// The pin button displayed on the tool bar (requieres CruiserWebNavigationToolPin)
+@property (nonatomic, strong) UIImage *pinButtonImage;
+// The down button displayed on the tool bar (requieres CruiserWebNavigationToolDown)
+@property (nonatomic, strong) UIImage *downButtonImage;
+// The up button displayed on the tool bar (requieres CruiserWebNavigationToolUp)
+@property (nonatomic, strong) UIImage *upButtonImage;
 // The action button displayed on the navigation bar (requieres at least 1 CruisersupportedWebActions value)
 @property (nonatomic, strong) UIImage *actionButtonImage;
+
+// The stop button displayed in addressField
+@property (nonatomic, strong) UIImage *stopButtonImage;
+// The reload button displayed in addressField
+@property (nonatomic, strong) UIImage *reloadButtonImage;
+
+
+///------------------------------------------------
+/// @name Navigation logic
+///------------------------------------------------
+
+// Load saved locations for web pages from user defaults
+- (void)loadPins;
+// Store all saved locations for web pages to user defaults
+- (void)storePins;
 
 
 ///------------------------------------------------

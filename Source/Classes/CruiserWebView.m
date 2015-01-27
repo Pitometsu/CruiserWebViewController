@@ -41,8 +41,7 @@
         if (self.navDelegate && [self.navDelegate respondsToSelector:@selector(webView:didUpdateProgress:)]) {
             [self.navDelegate webView:self didUpdateProgress:self.estimatedProgress];
         }
-    }
-    else {
+    } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
