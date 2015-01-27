@@ -21,6 +21,7 @@
 
 static char CruiserWebViewControllerKVOContext = 0;
 static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.pins_dictionary";
+static NSTimeInterval kAnimationDuration       = 0.25;
 
 
 @interface CruiserWebViewController ()
@@ -31,6 +32,8 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 @property (nonatomic, strong) UIBarButtonItem *downBarItem;
 @property (nonatomic, strong) UIBarButtonItem *upBarItem;
 @property (nonatomic, strong) UIBarButtonItem *actionBarItem;
+
+@property (nonatomic, strong) UIButton *stateButton;
 
 @property (nonatomic, strong) UIProgressView *progressView;
 
@@ -83,11 +86,11 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 - (void)commonInit
 {
     self.supportedWebNavigationTools = CruiserWebNavigationToolAll;
-    self.supportedWebActions = CruiserWebActionAll;
-    self.showLoadingProgress = YES;
-    self.hideBarsWithGestures = YES;
-    self.allowHistory = YES;
-    self.pins = [NSMutableDictionary dictionaryWithCapacity:1];
+    self.supportedWebActions         = CruiserWebActionAll;
+    self.showLoadingProgress         = YES;
+    self.hideBarsWithGestures        = YES;
+    self.allowHistory                = YES;
+    self.pins                        = [NSMutableDictionary dictionaryWithCapacity:1];
 }
 
 
@@ -122,6 +125,7 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
     }
 }
 
+// TODO: speed up UI, not use Did Appear method
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -363,6 +367,22 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
     return _supportedWebNavigationTools == CruiserWebNavigationToolAll;
 }
 
+- (UIButton *)stateButton
+{
+    if (!_stateButton) {
+        UIImage *stateImage = [self reloadButtonImage];
+        _stateButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _stateButton.frame = CGRectMake(0.f,
+                                        0.f,
+                                        stateImage.size.width,
+                                        stateImage.size.height);
+        [_stateButton setImage:stateImage
+                                forState:UIControlStateNormal];
+        [self updateStateButton];
+    }
+    return _stateButton;
+}
+
 - (UIImage *)backwardButtonImage
 {
     if (!_backwardButtonImage) {
@@ -497,54 +517,6 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
     _URL = URL;
 }
 
-- (void)setTitle:(NSString *)title
-{
-    NSString *url = self.webView.URL.absoluteString;
-
-    UILabel *label = (UILabel *)self.navigationItem.titleView;
-
-    if (!label || ![label isKindOfClass:[UILabel class]]) {
-        label = [UILabel new];
-        label.numberOfLines = 2;
-        label.textAlignment = NSTextAlignmentCenter;
-        label.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        self.navigationItem.titleView = label;
-    }
-    if (title.length == 0) {
-        label.attributedText = nil;
-        return;
-    }
-    UIFont *titleFont = [UIFont boldSystemFontOfSize:12.0];
-    UIFont *urlFont = [UIFont systemFontOfSize:10.0];
-    UIColor *textColor = [UIColor blackColor];
-
-    if (self.navigationBar.titleTextAttributes) {
-        titleFont = self.navigationBar.titleTextAttributes[NSFontAttributeName];
-        urlFont = [UIFont fontWithName:titleFont.fontName size:titleFont.pointSize-2.0];
-        textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName];
-    }
-    NSMutableString *text = [NSMutableString stringWithString:title];
-
-    if (url.length > 0) {
-        [text appendFormat:@"\n%@", url];
-    }
-    NSDictionary *attributes = @{NSFontAttributeName            : titleFont,
-                                 NSForegroundColorAttributeName : textColor};
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text
-                                                                                         attributes:attributes];
-    if (url.length > 0) {
-        [attributedString addAttribute:NSFontAttributeName
-                                 value:urlFont
-                                 range:[text rangeOfString:url]];
-    }
-    label.attributedText = attributedString;
-    [label sizeToFit];
-
-    CGRect frame = label.frame;
-    frame.size.height = CGRectGetHeight(self.navigationController.navigationBar.frame);
-    label.frame = frame;
-}
-
 // Sets the request errors with an alert view.
 - (void)setLoadingError:(NSError *)error
 {
@@ -595,7 +567,7 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 {
     NSNumber *position = @(self.webView.scrollView.contentOffset.y);
 
-    NSMutableArray *pagePins = self.pins[self.webView.URL];
+    NSMutableArray *pagePins = self.pins[self.webView.URL.absoluteString];
 
     if (!pagePins) { // new page
         pagePins = [[NSMutableArray alloc] initWithCapacity:1];
@@ -622,12 +594,12 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
     }];
 }
 
-// TODO: speedup scrollDown: and scrollUp: method's enumeration with bisection method
+// TODO: speed up scrollDown: and scrollUp: method's enumeration with bisection method
 - (void)scrollDown:(id)sender
 {
     NSNumber *position = @(self.webView.scrollView.contentOffset.y);
-    
-    NSMutableArray *pagePins = self.pins[self.webView.URL];
+
+    NSMutableArray *pagePins = self.pins[self.webView.URL.absoluteString];
 
     if (pagePins) {
         for (NSNumber *p in pagePins) {
@@ -650,9 +622,9 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 - (void)scrollUp:(id)sender
 {
     NSNumber *position = @(self.webView.scrollView.contentOffset.y);
-    
-    NSMutableArray *pagePins = self.pins[self.webView.URL];
-    
+
+    NSMutableArray *pagePins = self.pins[self.webView.URL.absoluteString];
+
     if (pagePins) {
         for (NSNumber *p in [pagePins reverseObjectEnumerator]) {
             if ([p compare:position] == NSOrderedAscending) {
@@ -692,10 +664,12 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 
 - (void)showForwardHistory:(UIGestureRecognizer *)sender
 {
-    if (!self.allowHistory || self.webView.backForwardList.forwardList.count == 0 || sender.state != UIGestureRecognizerStateBegan) {
+    if (!self.allowHistory
+        || self.webView.backForwardList.forwardList.count == 0
+        || sender.state != UIGestureRecognizerStateBegan
+        ) {
         return;
     }
-
     [self presentHistoryControllerForTool:CruiserWebNavigationToolForward fromView:sender.view];
 }
 
@@ -706,16 +680,22 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
     controller.tableView.delegate = self;
     controller.tableView.dataSource = self;
     controller.tableView.tag = tool;
-    controller.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissHistoryController)];
-
+    controller.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                                 target:self
+                                                                                                 action:@selector(dismissHistoryController)];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
     UIView *bar = CRUISER_IS_IPAD ? self.navigationBar : self.toolbar;
 
     if (CRUISER_IS_IPAD) {
         UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
-        [popover presentPopoverFromRect:view.frame inView:bar permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        [popover presentPopoverFromRect:view.frame
+                                 inView:bar
+               permittedArrowDirections:UIPopoverArrowDirectionAny
+                               animated:YES];
     } else {
-        [self presentViewController:navigationController animated:YES completion:NULL];
+        [self presentViewController:navigationController
+                           animated:YES
+                         completion:NULL];
     }
 }
 
@@ -727,12 +707,14 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
         [self setToolbarItems:[self navigationToolItems]];
     }
     self.toolbar = self.navigationController.toolbar;
+
     self.navigationBar = self.navigationController.navigationBar;
     self.navigationBarSuperView = self.navigationBar.superview;
 
-    self.navigationController.hidesBarsOnSwipe = self.hideBarsWithGestures;
-    self.navigationController.hidesBarsWhenKeyboardAppears = self.hideBarsWithGestures;
     self.navigationController.hidesBarsWhenVerticallyCompact = self.hideBarsWithGestures;
+    self.navigationController.hidesBarsOnSwipe               = NO; // because not good for navigation
+    self.navigationController.hidesBottomBarWhenPushed       = NO; // because not good for navigation
+    self.navigationController.hidesBarsWhenKeyboardAppears   = NO; // because of address field
 
     if (self.hideBarsWithGestures) {
         [self.navigationBar addObserver:self
@@ -752,7 +734,10 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
         && self.navigationController.toolbarHidden
         && self.toolbarItems.count > 0
         ) {
-        [self.navigationController setToolbarHidden:NO];
+        self.navigationController.toolbarHidden = NO;
+    }
+    if (self.addressField) {
+        self.addressField.rightView = self.stateButton;
     }
 }
 
@@ -787,28 +772,31 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 
     self.actionBarItem.enabled = !self.webView.isLoading;
 
-    [self updateStateBarItem];
+    [self updateStateButton];
 }
 
 - (void)updatePinBarItems
 {
-    // TODO: Add logic
-    self.pinBarItem.enabled = YES;
+    self.pinBarItem.enabled  = YES;
     self.downBarItem.enabled = YES;
-    self.upBarItem.enabled = YES;
+    self.upBarItem.enabled   = YES;
 }
 
-- (void)updateStateBarItem
+- (void)updateStateButton
 {
-    // TODO: text field clear button
-    /*
-    self.stateBarItem.target = self.webView;
-    self.stateBarItem.action = self.webView.isLoading ? @selector(stopLoading) : @selector(reload);
-    self.stateBarItem.image = self.webView.isLoading ? self.stopButtonImage : self.reloadButtonImage;
-    self.stateBarItem.landscapeImagePhone = nil;
-    self.stateBarItem.accessibilityLabel = NSLocalizedStringFromTable(self.webView.isLoading ? @"Stop" : @"Reload", @"CruiserWebViewController", @"Accessibility label button title");
-    self.stateBarItem.enabled = YES;
-     */
+    [self.stateButton removeTarget:nil
+                            action:NULL
+                  forControlEvents:UIControlEventAllEvents];
+    [self.stateButton addTarget:self.webView
+                         action:self.webView.isLoading ? @selector(stopLoading) : @selector(reload)
+               forControlEvents:UIControlEventTouchUpInside];
+    [self.stateButton setImage:self.webView.isLoading ? self.stopButtonImage : self.reloadButtonImage
+                      forState:UIControlStateNormal];
+    self.stateButton.accessibilityLabel = NSLocalizedStringFromTable(self.webView.isLoading ? @"Stop"
+                                                                     : @"Reload",
+                                                                     @"CruiserWebViewController",
+                                                                     @"Accessibility label button title");
+    self.stateButton.enabled = YES;
 }
 
 - (void)presentActivityController:(id)sender
@@ -817,7 +805,9 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
         return;
     }
 
-    [self presentActivityControllerWithItem:self.webView.URL.absoluteString andTitle:self.webView.title sender:sender];
+    [self presentActivityControllerWithItem:self.webView.URL.absoluteString
+                                   andTitle:self.webView.title
+                                     sender:sender];
 }
 
 - (void)presentActivityControllerWithItem:(id)item
@@ -848,7 +838,7 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
     if (!_progressView) {
         return;
     }
-    [UIView animateWithDuration:animated ? 0.25 : 0.0
+    [UIView animateWithDuration:animated ? kAnimationDuration : 0.0
                      animations:^{
                          self.progressView.alpha = 0;
                      } completion:^(BOOL finished) {
@@ -870,7 +860,13 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 - (void)                webView:(CruiserWebView *)webView
   didStartProvisionalNavigation:(WKNavigation *)navigation
 {
-    [self updateStateBarItem];
+    [self updateStateButton];
+
+    if (self.addressField) {
+        self.addressField.text = self.webView.URL.absoluteString;
+    } else {
+        self.title = self.webView.URL.absoluteString;
+    }
 }
 
 - (void)      webView:(CruiserWebView *)webView
@@ -911,7 +907,11 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 {
     [self updateToolbarItems];
 
-    self.title = self.webView.title;
+    if (self.addressField) {
+        self.addressField.text = self.webView.title;
+    } else {
+        self.title = self.webView.title;
+    }
 }
 
 - (void)    webView:(CruiserWebView *)webView
@@ -921,7 +921,11 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
     [self updateToolbarItems];
     [self setLoadingError:error];
 
-    self.title = nil;
+    if (self.addressField) {
+        self.addressField.text = @"";
+    } else {
+        self.title = @"";
+    }
 }
 
 
@@ -1059,6 +1063,13 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
     }
 }
 
+- (void)textFieldDidChange
+{
+    if (self.addressField) {
+        [self.addressField sizeToFit];
+    }
+}
+
 
 #pragma mark - View Auto-Rotation
 
@@ -1075,8 +1086,24 @@ static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.p
 
 #pragma mark - UITextFieldDelegate
 
-// TODO: handling clear icon for stop-refresh logic
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if (textField != self.addressField) {
+        return;
+    }
+    textField.textAlignment = NSTextAlignmentLeft;
+    textField.text = self.webView.URL.absoluteString;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField != self.addressField) {
+        return;
+    }
+    textField.textAlignment = NSTextAlignmentCenter;
+    textField.text = self.webView.title;
+}
+
 // TODO: resizing textfild (?)
-// TODO: align text in textfild
 
 @end

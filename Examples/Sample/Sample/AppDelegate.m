@@ -15,7 +15,8 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)            application:(UIApplication *)application
+  didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
@@ -28,6 +29,18 @@
 #else
     CruiserWebViewController *controller = [[CruiserWebViewController alloc] initWithURL:[NSURL URLWithString:@"http://appcruiser.com/welcome"]];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    UITextField *addressField = [[UITextField alloc] initWithFrame:CGRectMake(10, 11, 355, 25)];
+    addressField.delegate                  = controller;
+    addressField.borderStyle               = UITextBorderStyleRoundedRect;
+    addressField.textAlignment             = NSTextAlignmentCenter;
+    addressField.returnKeyType             = UIReturnKeyGo;
+    addressField.keyboardType              = UIKeyboardTypeURL;
+    addressField.clearButtonMode           = UITextFieldViewModeWhileEditing;
+    addressField.rightViewMode             = UITextFieldViewModeUnlessEditing;
+    addressField.adjustsFontSizeToFitWidth = YES;
+    addressField.minimumFontSize           = 6.f;
+    [navController.navigationBar addSubview:addressField];
+    controller.addressField = addressField;
     self.window.rootViewController = navController;
 #endif
 
