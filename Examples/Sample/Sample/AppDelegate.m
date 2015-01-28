@@ -21,22 +21,26 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
 #if DEBUG_LOCAL
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"NSHipster.com" ofType:@"html"];
-
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"NSHipster.com"
+                                                     ofType:@"html"];
     ViewController *controller = [[ViewController alloc] initWithFileURL:[NSURL fileURLWithPath:path]];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     self.window.rootViewController = navController;
 #else
-    CruiserWebViewController *controller = [[CruiserWebViewController alloc] initWithURL:[NSURL URLWithString:@"http://appcruiser.com/welcome"]];
+    CruiserWebViewController *controller = [[CruiserWebViewController alloc] initWithURL:
+                                            [NSURL URLWithString:@"http://appcruiser.com/welcome"]];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     UITextField *addressField = [[UITextField alloc] initWithFrame:CGRectMake(10, 11, 355, 25)];
     addressField.delegate                  = controller;
     addressField.borderStyle               = UITextBorderStyleRoundedRect;
     addressField.textAlignment             = NSTextAlignmentCenter;
     addressField.returnKeyType             = UIReturnKeyGo;
-    addressField.keyboardType              = UIKeyboardTypeURL;
+    addressField.keyboardType              = UIKeyboardTypeWebSearch;
     addressField.clearButtonMode           = UITextFieldViewModeWhileEditing;
     addressField.rightViewMode             = UITextFieldViewModeUnlessEditing;
+    addressField.leftViewMode              = UITextFieldViewModeAlways;
+    addressField.autocapitalizationType    = UITextAutocapitalizationTypeNone;
+    addressField.autocorrectionType        = UITextAutocorrectionTypeNo;
     addressField.adjustsFontSizeToFitWidth = YES;
     addressField.minimumFontSize           = 6.f;
     [navController.navigationBar addSubview:addressField];

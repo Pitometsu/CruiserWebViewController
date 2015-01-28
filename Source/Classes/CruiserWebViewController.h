@@ -10,10 +10,17 @@
 //  Licence: MIT-Licence
 //
 
-#import <UIKit/UIKit.h>
-#import <WebKit/WebKit.h>
-
 #import "CruiserWebView.h"
+#import <UIKit/UIKit.h>
+
+
+/**
+ Types of supported search services.
+ */
+typedef NS_ENUM(NSUInteger, CruiserSearchService) {
+    CruiserSearchServicePrimary,    // Google.com by default
+    CruiserSearchServiceAlternative // DuckDuckGo.com by default
+};
 
 /**
  Types of supported navigation tools.
@@ -31,10 +38,10 @@ typedef NS_OPTIONS(NSUInteger, CruiserWebNavigationTools) {
 /**
  Types of supported actions (i.e. Share & Copy link, Add to Reading List, Open in Safari/Chrome/Opera/Dolphin).
  */
-typedef NS_OPTIONS(NSUInteger, CruisersupportedWebActions) {
+typedef NS_OPTIONS(NSUInteger, CruiserSupportedWebActions) {
     CruiserWebActionAll                = -1,
     CruiserWebActionNone               = 0,
-    CruisersupportedWebActionshareLink = 1 << 0,
+    CruiserSupportedWebActionshareLink = 1 << 0,
     CruiserWebActionCopyLink           = 1 << 1,
     CruiserWebActionReadLater          = 1 << 2,
     CruiserWebActionOpenSafari         = 1 << 3,
@@ -59,7 +66,7 @@ typedef NS_OPTIONS(NSUInteger, CruisersupportedWebActions) {
 /** The supported navigation tool bar items. Default is All. */
 @property (nonatomic, readwrite) CruiserWebNavigationTools supportedWebNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is All. */
-@property (nonatomic, readwrite) CruisersupportedWebActions supportedWebActions;
+@property (nonatomic, readwrite) CruiserSupportedWebActions supportedWebActions;
 /** Yes if a progress bar indicates the . Default is YES. */
 @property (nonatomic) BOOL showLoadingProgress;
 /** YES if long pressing the backward and forward buttons the navigation history is displayed. Default is YES. */
@@ -116,14 +123,27 @@ typedef NS_OPTIONS(NSUInteger, CruisersupportedWebActions) {
 @property (nonatomic, strong) UIImage *downButtonImage;
 // The up button displayed on the tool bar (requieres CruiserWebNavigationToolUp)
 @property (nonatomic, strong) UIImage *upButtonImage;
-// The action button displayed on the navigation bar (requieres at least 1 CruisersupportedWebActions value)
+// The action button displayed on the navigation bar (requieres at least 1 CruiserSupportedWebActions value)
 @property (nonatomic, strong) UIImage *actionButtonImage;
 
 // The stop button displayed in addressField
 @property (nonatomic, strong) UIImage *stopButtonImage;
 // The reload button displayed in addressField
 @property (nonatomic, strong) UIImage *reloadButtonImage;
+// The button for first search service displayed in addressField
+@property (nonatomic, strong) UIImage *primarySearchButtonImage;
+// The button for second search service displayed in addressField
+@property (nonatomic, strong) UIImage *alternativeSearchButtonImage;
 
+
+///------------------------------------------------
+/// @name Search services
+///------------------------------------------------
+
+// String for request to primary search service
+@property (nonatomic, copy) NSString *primarySearchService;
+// String for request to alternative search service
+@property (nonatomic, copy) NSString *alternativeSearchService;
 
 ///------------------------------------------------
 /// @name Navigation logic

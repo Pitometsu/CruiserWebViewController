@@ -12,7 +12,9 @@
 
 #import <WebKit/WebKit.h>
 
+
 @protocol CruiserNavigationDelegate;
+
 
 @interface CruiserWebView : WKWebView
 

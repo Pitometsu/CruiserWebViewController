@@ -10,8 +10,9 @@
 //  Licence: MIT-Licence
 //
 
-#import "CruiserWebViewController.h"
 #import "CruiserPolyActivity.h"
+#import "CruiserWebViewController.h"
+
 
 #define CRUISER_IS_IPAD [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad
 #define CRUISER_IS_LANDSCAPE \
@@ -19,9 +20,11 @@
  [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
 
 
-static char CruiserWebViewControllerKVOContext = 0;
-static NSString *const kPinsDictionaryKey      = @"cruiser_web_view_controller.pins_dictionary";
-static NSTimeInterval kAnimationDuration       = 0.25;
+static char CruiserWebViewControllerKVOContext       = 0;
+static NSString *const kPinsDictionaryKey            = @"cruiser_web_view_controller.pins_dictionary";
+static NSTimeInterval kAnimationDuration             = 0.25;
+static NSString *const kGoogleServiceRequestPath     = @"https://www.google.com/search?q=";
+static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/?q=";
 
 
 @interface CruiserWebViewController ()
@@ -34,6 +37,9 @@ static NSTimeInterval kAnimationDuration       = 0.25;
 @property (nonatomic, strong) UIBarButtonItem *actionBarItem;
 
 @property (nonatomic, strong) UIButton *stateButton;
+@property (nonatomic, strong) UIButton *webButton;
+
+@property (nonatomic, assign) CruiserSearchService currentSearchService;
 
 @property (nonatomic, strong) UIProgressView *progressView;
 
@@ -85,6 +91,9 @@ static NSTimeInterval kAnimationDuration       = 0.25;
 
 - (void)commonInit
 {
+    self.currentSearchService        = CruiserSearchServicePrimary;
+    self.primarySearchService        = kGoogleServiceRequestPath;
+    self.alternativeSearchService    = kDuckDuckGoServiceRequestPath;
     self.supportedWebNavigationTools = CruiserWebNavigationToolAll;
     self.supportedWebActions         = CruiserWebActionAll;
     self.showLoadingProgress         = YES;
@@ -198,7 +207,8 @@ static NSTimeInterval kAnimationDuration       = 0.25;
 {
     if (!_webView)
     {
-        CruiserWebView *webView = [[CruiserWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
+        CruiserWebView *webView = [[CruiserWebView alloc] initWithFrame:self.view.bounds
+                                                          configuration:[WKWebViewConfiguration new]];
         webView.backgroundColor = [UIColor whiteColor];
         webView.allowsBackForwardNavigationGestures = YES;
         webView.UIDelegate = self;
@@ -383,6 +393,24 @@ static NSTimeInterval kAnimationDuration       = 0.25;
     return _stateButton;
 }
 
+- (UIButton *)webButton
+{
+    if (!_webButton) {
+        UIImage *webImage = [self primarySearchButtonImage];
+        _webButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _webButton.frame = CGRectMake(0.f,
+                                      0.f,
+                                      webImage.size.width,
+                                      webImage.size.height);
+        [_webButton setImage:webImage
+                    forState:UIControlStateNormal];
+        [_webButton addTarget:self
+                       action:@selector(switchSearchService)
+             forControlEvents:UIControlEventTouchDown];
+    }
+    return _webButton;
+}
+
 - (UIImage *)backwardButtonImage
 {
     if (!_backwardButtonImage) {
@@ -447,6 +475,22 @@ static NSTimeInterval kAnimationDuration       = 0.25;
     return _stopButtonImage;
 }
 
+- (UIImage *)primarySearchButtonImage
+{
+    if (!_primarySearchButtonImage) {
+        _primarySearchButtonImage = [UIImage imageNamed:@"cruiser_icn_toolbar_web"];
+    }
+    return _primarySearchButtonImage;
+}
+
+- (UIImage *)alternativeSearchButtonImage
+{
+    if (!_alternativeSearchButtonImage) {
+        _alternativeSearchButtonImage = [UIImage imageNamed:@"cruiser_icn_toolbar_face"];
+    }
+    return _alternativeSearchButtonImage;
+}
+
 - (NSArray *)applicationActivitiesForItem:(id)item
 {
     NSMutableArray *activities = [NSMutableArray new];
@@ -486,7 +530,7 @@ static NSTimeInterval kAnimationDuration       = 0.25;
     if (self.supportsAllActions) {
         return types;
     }
-    if ((_supportedWebActions & CruisersupportedWebActionshareLink) == 0) {
+    if ((_supportedWebActions & CruiserSupportedWebActionshareLink) == 0) {
         [types addObjectsFromArray:@[UIActivityTypeMail, UIActivityTypeMessage,
                                      UIActivityTypePostToFacebook, UIActivityTypePostToTwitter,
                                      UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo,
@@ -535,6 +579,45 @@ static NSTimeInterval kAnimationDuration       = 0.25;
 
 
 #pragma mark - CruiserWebViewController methods
+
+- (BOOL)validateHostname:(NSString *)query
+{
+    NSString *urlRegEx = @"((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
+    return [urlTest evaluateWithObject:query];
+}
+
+- (NSURL *)URLFromString:(NSString *)query
+{
+    // try to use query as an URL
+    NSURL *url = [NSURL URLWithString:query];
+
+    if (url) {
+        if (url.host && url.scheme) {
+            return url;
+        }
+        if ([self validateHostname:query]) {
+            url = [self URLFromString:
+                   [NSString stringWithFormat:@"http://%@", query]];
+            return url;
+        }
+    }
+    // make search by query
+    NSString *currentSearchServiceRequestPath = @"";
+
+    switch (self.currentSearchService) {
+        case CruiserSearchServicePrimary:
+            currentSearchServiceRequestPath = [kGoogleServiceRequestPath copy];
+            break;
+        case CruiserSearchServiceAlternative:
+            currentSearchServiceRequestPath = [kDuckDuckGoServiceRequestPath copy];
+            break;
+    }
+    url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
+                                currentSearchServiceRequestPath,
+                                query]];
+    return url;
+}
 
 - (void)loadURL:(NSURL *)URL
 {
@@ -738,6 +821,7 @@ static NSTimeInterval kAnimationDuration       = 0.25;
     }
     if (self.addressField) {
         self.addressField.rightView = self.stateButton;
+        self.addressField.leftView = self.webButton;
     }
 }
 
@@ -797,6 +881,24 @@ static NSTimeInterval kAnimationDuration       = 0.25;
                                                                      @"CruiserWebViewController",
                                                                      @"Accessibility label button title");
     self.stateButton.enabled = YES;
+}
+
+- (void)switchSearchService
+{
+    switch (self.currentSearchService) {
+        case CruiserSearchServicePrimary: {
+            [self.webButton setImage:[self alternativeSearchButtonImage]
+                            forState:UIControlStateNormal];
+            self.currentSearchService = CruiserSearchServiceAlternative;
+        }
+            break;
+        case CruiserSearchServiceAlternative: {
+            [self.webButton setImage:[self primarySearchButtonImage]
+                            forState:UIControlStateNormal];
+            self.currentSearchService = CruiserSearchServicePrimary;
+        }
+            break;
+    }
 }
 
 - (void)presentActivityController:(id)sender
@@ -1063,13 +1165,6 @@ static NSTimeInterval kAnimationDuration       = 0.25;
     }
 }
 
-- (void)textFieldDidChange
-{
-    if (self.addressField) {
-        [self.addressField sizeToFit];
-    }
-}
-
 
 #pragma mark - View Auto-Rotation
 
@@ -1104,6 +1199,14 @@ static NSTimeInterval kAnimationDuration       = 0.25;
     textField.text = self.webView.title;
 }
 
-// TODO: resizing textfild (?)
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField != self.addressField) {
+        return YES;
+    }
+    [self loadURL:[self URLFromString:textField.text]];
+    [textField resignFirstResponder];
+    return NO;
+}
 
 @end

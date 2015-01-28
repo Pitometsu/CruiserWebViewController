@@ -8,7 +8,7 @@
 
 // CruiserWebViewController
 #define COCOAPODS_POD_AVAILABLE_CruiserWebViewController
-#define COCOAPODS_VERSION_MAJOR_CruiserWebViewController 4
+#define COCOAPODS_VERSION_MAJOR_CruiserWebViewController 6
 #define COCOAPODS_VERSION_MINOR_CruiserWebViewController 0
 #define COCOAPODS_VERSION_PATCH_CruiserWebViewController 0
 

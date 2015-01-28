@@ -1,5 +1,5 @@
 PODS:
-  - CruiserWebViewController (4.0)
+  - CruiserWebViewController (6.0)
 
 DEPENDENCIES:
   - CruiserWebViewController (from `../../CruiserWebViewController.podspec`)
@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../../CruiserWebViewController.podspec
 
 SPEC CHECKSUMS:
-  CruiserWebViewController: 01746e862f99a08fd9119627b90a9e2506d30dd0
+  CruiserWebViewController: 153d486dcd4cc0a925ddad63eca03a750a792473
 
 COCOAPODS: 0.35.0
