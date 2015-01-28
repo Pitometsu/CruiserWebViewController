@@ -615,7 +615,8 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
     }
     url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
                                 currentSearchServiceRequestPath,
-                                query]];
+                                [query stringByAddingPercentEscapesUsingEncoding:
+                                 NSASCIIStringEncoding]]];
     return url;
 }
 
