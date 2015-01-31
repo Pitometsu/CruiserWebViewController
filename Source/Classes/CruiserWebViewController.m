@@ -152,7 +152,10 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
         });
     }];
 
-    if (!self.webView.URL) {
+    if (!self.webView.URL
+        && !self.webView.loading
+        && self.URL
+        ) {
         [self loadURL:self.URL];
     }
 }
@@ -651,9 +654,10 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
 {
     if ([URL isFileURL]) {
         NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
-        NSString *HTMLString = [[NSString alloc] initWithData:data encoding:NSStringEncodingConversionAllowLossy];
-
-        [self.webView loadHTMLString:HTMLString baseURL:nil];
+        NSString *HTMLString = [[NSString alloc] initWithData:data
+                                                     encoding:NSStringEncodingConversionAllowLossy];
+        [self.webView loadHTMLString:HTMLString
+                             baseURL:nil];
     } else {
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
         [self.webView loadRequest:request];

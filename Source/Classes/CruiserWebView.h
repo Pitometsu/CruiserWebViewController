@@ -23,8 +23,13 @@
 @end
 
 
+// CruiserNavigationDelegate
 @protocol CruiserNavigationDelegate <WKNavigationDelegate>
 
+- (void)webView:(CruiserWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation;
+- (void)webView:(CruiserWebView *)webView didCommitNavigation:(WKNavigation *)navigation;
 - (void)webView:(CruiserWebView *)webView didUpdateProgress:(CGFloat)progress;
+- (void)webView:(CruiserWebView *)webView didFinishNavigation:(WKNavigation *)navigation;
+- (void)webView:(CruiserWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error;
 
 @end
