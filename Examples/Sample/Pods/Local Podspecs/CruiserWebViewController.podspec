@@ -15,6 +15,8 @@ Pod::Spec.new do |s|
   s.platform       = :ios, '8.0'
   s.requires_arc   = true
 
+  s.dependency 'IPSqueezableViewController', '~> 0.0.1'
+
   s.source_files   = 'Source/Classes/*.{h,m}'
   s.resources      = 'Source/Resources/*.*'
   s.framework      = 'UIKit', 'WebKit'

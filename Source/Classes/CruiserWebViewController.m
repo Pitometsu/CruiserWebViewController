@@ -21,13 +21,15 @@
 
 
 static char CruiserWebViewControllerKVOContext       = 0;
+static const NSTimeInterval kAnimationDuration       = 0.25;
 static NSString *const kPinsDictionaryKey            = @"cruiser_web_view_controller.pins_dictionary";
-static NSTimeInterval kAnimationDuration             = 0.25;
 static NSString *const kGoogleServiceRequestPath     = @"https://www.google.com/search?q=";
 static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/?q=";
+static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_])*)+"
+                                                        "([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
 
 
-@interface CruiserWebViewController ()
+@interface CruiserWebViewController () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIBarButtonItem *backwardBarItem;
 @property (nonatomic, strong) UIBarButtonItem *forwardBarItem;
@@ -47,6 +49,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 @property (nonatomic, strong) UILongPressGestureRecognizer *forwardLongPress;
 
 @property (nonatomic, strong) NSMutableDictionary *pins;
+//@property (nonatomic, strong) NSMutableDictionary *pages;
 
 @property (nonatomic, weak) UIToolbar *toolbar;
 @property (nonatomic, weak) UINavigationBar *navigationBar;
@@ -57,11 +60,10 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 @implementation CruiserWebViewController
 
-@synthesize URL = _URL;
-
 - (instancetype)init
 {
     self = [super init];
+
     if (self) {
         [self commonInit];
     }
@@ -73,6 +75,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
     NSParameterAssert(URL);
 
     self = [self init];
+
     if (self) {
         _URL = URL;
     }
@@ -81,6 +84,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (instancetype)initWithFileURL:(NSURL *)URL
 {
+    // TODO: check is url valid and file exist
     return [self initWithURL:URL];
 }
 
@@ -116,6 +120,25 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    // IPNavBarSqueezableViewController
+    self.triggeringScrollView = self.webView.scrollView;
+
+    if (self.addressField) {
+        self.titleFont = self.addressField.font;
+    }
+    __weak typeof(self) this = self;
+
+    self.expandCompletion = ^{
+        if (!this.addressField) {
+            return;
+        }
+        this.addressField.backgroundColor = [this.addressField.backgroundColor
+                                             colorWithAlphaComponent:1.f];
+        this.addressField.borderStyle = UITextBorderStyleRoundedRect;
+        this.addressField.rightViewMode = UITextFieldViewModeUnlessEditing;
+        this.addressField.leftViewMode  = UITextFieldViewModeAlways;
+    };
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -205,8 +228,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (CruiserWebView *)webView
 {
-    if (!_webView)
-    {
+    if (!_webView) {
         CruiserWebView *webView = [[CruiserWebView alloc] initWithFrame:self.view.bounds
                                                           configuration:[WKWebViewConfiguration new]];
         webView.backgroundColor = [UIColor whiteColor];
@@ -222,8 +244,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (UIProgressView *)progressView
 {
-    if (!_progressView)
-    {
+    if (!_progressView) {
         CGFloat lineHeight = 2.f;
         CGRect frame = CGRectMake(0.f,
                                   CGRectGetHeight(self.navigationBar.bounds) - lineHeight,
@@ -242,8 +263,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (UIBarButtonItem *)backwardBarItem
 {
-    if (!_backwardBarItem)
-    {
+    if (!_backwardBarItem) {
         _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[self backwardButtonImage]
                                               landscapeImagePhone:nil
                                                             style:UIBarButtonItemStylePlain
@@ -259,8 +279,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (UIBarButtonItem *)forwardBarItem
 {
-    if (!_forwardBarItem)
-    {
+    if (!_forwardBarItem) {
         _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[self forwardButtonImage]
                                              landscapeImagePhone:nil
                                                            style:UIBarButtonItemStylePlain
@@ -276,8 +295,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (UIBarButtonItem *)pinBarItem
 {
-    if (!_pinBarItem)
-    {
+    if (!_pinBarItem) {
         _pinBarItem = [[UIBarButtonItem alloc] initWithImage:[self pinButtonImage]
                                          landscapeImagePhone:nil
                                                        style:UIBarButtonItemStylePlain
@@ -293,8 +311,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (UIBarButtonItem *)downBarItem
 {
-    if (!_downBarItem)
-    {
+    if (!_downBarItem) {
         _downBarItem = [[UIBarButtonItem alloc] initWithImage:[self downButtonImage]
                                           landscapeImagePhone:nil
                                                         style:UIBarButtonItemStylePlain
@@ -310,8 +327,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (UIBarButtonItem *)upBarItem
 {
-    if (!_upBarItem)
-    {
+    if (!_upBarItem) {
         _upBarItem = [[UIBarButtonItem alloc] initWithImage:[self upButtonImage]
                                         landscapeImagePhone:nil
                                                       style:UIBarButtonItemStylePlain
@@ -327,8 +343,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (UIBarButtonItem *)actionBarItem
 {
-    if (!_actionBarItem)
-    {
+    if (!_actionBarItem) {
         _actionBarItem = [[UIBarButtonItem alloc] initWithImage:[self actionButtonImage]
                                             landscapeImagePhone:nil
                                                           style:UIBarButtonItemStylePlain
@@ -493,8 +508,8 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (NSArray *)applicationActivitiesForItem:(id)item
 {
-    NSMutableArray *activities = [NSMutableArray new];
-
+    NSMutableArray *activities = [[NSMutableArray alloc]
+                                  initWithCapacity:5];
     if ([item isKindOfClass:[UIImage class]]) {
         return activities;
     }
@@ -518,8 +533,8 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (NSArray *)excludedActivityTypesForItem:(id)item
 {
-    NSMutableArray *types = [NSMutableArray new];
-
+    NSMutableArray *types = [[NSMutableArray alloc]
+                             initWithCapacity:10];
     if (![item isKindOfClass:[UIImage class]]) {
         [types addObjectsFromArray:@[UIActivityTypeCopyToPasteboard,
                                      UIActivityTypeSaveToCameraRoll,
@@ -536,7 +551,9 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
                                      UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo,
                                      UIActivityTypeAirDrop]];
     }
-    if ((_supportedWebActions & CruiserWebActionReadLater) == 0 && [item isKindOfClass:[UIImage class]]) {
+    if ((_supportedWebActions & CruiserWebActionReadLater) == 0
+        && [item isKindOfClass:[UIImage class]]
+        ) {
         [types addObject:UIActivityTypeAddToReadingList];
     }
     return types;
@@ -577,13 +594,23 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
                       otherButtonTitles:nil] show];
 }
 
+- (void)setAddressField:(UITextField *)addressField
+{
+    if (self.addressField == addressField) {
+        return;
+    }
+    addressField.delegate = self;
+    self->_addressField = addressField;
+    self.titleFont = self.addressField.font;
+}
+
 
 #pragma mark - CruiserWebViewController methods
 
 - (BOOL)validateHostname:(NSString *)query
 {
-    NSString *urlRegEx = @"((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
-    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",
+                            kHostnameRegex];
     return [urlTest evaluateWithObject:query];
 }
 
@@ -832,7 +859,9 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
     UIView *backwardButton= [self.backwardBarItem valueForKey:@"view"];
     if (backwardButton.gestureRecognizers.count == 0) {
         if (!_backwardLongPress) {
-            _backwardLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showBackwardHistory:)];
+            _backwardLongPress = [[UILongPressGestureRecognizer
+                                   alloc] initWithTarget:self
+                                                  action:@selector(showBackwardHistory:)];
         }
         [backwardButton addGestureRecognizer:self.backwardLongPress];
     }
@@ -840,7 +869,9 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
     UIView *forwardBarButton= [self.forwardBarItem valueForKey:@"view"];
     if (forwardBarButton.gestureRecognizers.count == 0) {
         if (!_forwardLongPress) {
-            _forwardLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showForwardHistory:)];
+            _forwardLongPress = [[UILongPressGestureRecognizer
+                                  alloc] initWithTarget:self
+                                                 action:@selector(showForwardHistory:)];
         }
         [forwardBarButton addGestureRecognizer:self.forwardLongPress];
     }
@@ -848,7 +879,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
 - (void)updateToolbarItems
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:[self.webView isLoading]];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:self.webView.loading];
 
     self.backwardBarItem.enabled = [self.webView canGoBack];
     self.forwardBarItem.enabled = [self.webView canGoForward];
@@ -967,9 +998,9 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
     if (self.addressField) {
         self.addressField.text = self.webView.URL.absoluteString;
-    } else {
-        self.title = self.webView.URL.absoluteString;
+        
     }
+    self.title = self.webView.URL.absoluteString;
 }
 
 - (void)      webView:(CruiserWebView *)webView
@@ -1012,9 +1043,8 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
 
     if (self.addressField) {
         self.addressField.text = self.webView.title;
-    } else {
-        self.title = self.webView.title;
     }
+    self.title = self.webView.title;
 }
 
 - (void)    webView:(CruiserWebView *)webView
@@ -1045,6 +1075,67 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
     return nil;
 }
 
+#pragma mark - UIScrollViewDelegate methods
+/*
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    if (decelerate) {
+        return;
+    }
+    if (self.toolbar.hidden || self.navigationBar.hidden) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BarsShouldUnhide"
+                                                            object:self];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (self.toolbar.hidden || self.navigationBar.hidden) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BarsShouldUnhide"
+                                                            object:self];
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (self.hideBarsWithGestures) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BarsShouldHide"
+                                                            object:self];
+    }
+}
+*/
+
+#pragma mark - IPNavBarSqueezableViewController
+
+- (void)processBars
+{
+    [self squeezeAddressField];
+
+    [super processBars];
+}
+
+- (void)squeezeBars
+{
+    [self squeezeAddressField];
+
+    [super squeezeBars];
+}
+
+- (void)squeezeAddressField
+{
+    if (!self.addressField) {
+        return;
+    }
+    self.addressField.text = self.webView.title;
+    self.addressField.borderStyle = UITextBorderStyleNone;
+    self.addressField.backgroundColor = [self.addressField.backgroundColor
+                                         colorWithAlphaComponent:0.f];
+    [self.addressField resignFirstResponder];
+
+    self.addressField.rightViewMode = UITextFieldViewModeNever;
+    self.addressField.leftViewMode  = UITextFieldViewModeNever;
+}
 
 #pragma mark - UITableViewDataSource Methods
 
@@ -1189,6 +1280,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
     }
     textField.textAlignment = NSTextAlignmentLeft;
     textField.text = self.webView.URL.absoluteString;
+    self.title = self.addressField.text;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
@@ -1198,6 +1290,7 @@ static NSString *const kDuckDuckGoServiceRequestPath = @"https://duckduckgo.com/
     }
     textField.textAlignment = NSTextAlignmentCenter;
     textField.text = self.webView.title;
+    self.title = self.addressField.text;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

@@ -11,6 +11,7 @@
 //
 
 #import "CruiserWebView.h"
+#import "IPNavBarSqueezableViewController.h"
 #import <UIKit/UIKit.h>
 
 
@@ -53,11 +54,11 @@ typedef NS_OPTIONS(NSUInteger, CruiserSupportedWebActions) {
 /**
  A very simple web browser with useful navigation and tooling features.
  */
-@interface CruiserWebViewController : UIViewController <CruiserNavigationDelegate,
-                                                        WKUIDelegate,
-                                                        UITableViewDataSource,
-                                                        UITableViewDelegate,
-                                                        UITextFieldDelegate>
+@interface CruiserWebViewController : IPNavBarSqueezableViewController <CruiserNavigationDelegate,
+                                                                        WKUIDelegate,
+                                                                        UITableViewDataSource,
+                                                                        UITableViewDelegate,
+                                                                        UITextFieldDelegate>
 
 /** The web view that the controller manages. */
 @property (nonatomic, strong) CruiserWebView *webView;

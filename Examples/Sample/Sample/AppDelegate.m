@@ -33,6 +33,7 @@
     UITextField *addressField = [[UITextField alloc] initWithFrame:CGRectMake(10, 11, 355, 25)];
     addressField.delegate                  = controller;
     addressField.borderStyle               = UITextBorderStyleRoundedRect;
+    addressField.backgroundColor           = UIColor.whiteColor;
     addressField.textAlignment             = NSTextAlignmentCenter;
     addressField.returnKeyType             = UIReturnKeyGo;
     addressField.keyboardType              = UIKeyboardTypeWebSearch;
@@ -43,7 +44,7 @@
     addressField.autocorrectionType        = UITextAutocorrectionTypeNo;
     addressField.adjustsFontSizeToFitWidth = YES;
     addressField.minimumFontSize           = 6.f;
-    [navController.navigationBar addSubview:addressField];
+    controller.navigationItem.titleView = addressField;
     controller.addressField = addressField;
     self.window.rootViewController = navController;
 #endif
