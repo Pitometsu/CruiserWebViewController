@@ -107,6 +107,7 @@ typedef NS_OPTIONS(NSUInteger, CruiserSupportedWebActions) {
 /// @name UI outlets
 ///------------------------------------------------
 
+// The text field for URL or Web search
 @property (nonatomic, weak) IBOutlet UITextField *addressField;
 
 
@@ -178,5 +179,16 @@ typedef NS_OPTIONS(NSUInteger, CruiserSupportedWebActions) {
 
 // UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath NS_REQUIRES_SUPER;
+
+
+///------------------------------------------------
+/// @name Toolbar Navigation Items Actions
+///------------------------------------------------
+
+- (void)goBackward:(id)sender;
+- (void)goForward:(id)sender;
+- (void)pinHere:(id)sender;
+- (void)scrollDown:(id)sender;
+- (void)scrollUp:(id)sender;
 
 @end

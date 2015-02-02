@@ -89,6 +89,10 @@ install_resource()
                     install_resource "../../../Source/Resources/de.lproj"
                     install_resource "../../../Source/Resources/en.lproj"
                     install_resource "../../../Source/Resources/es.lproj"
+                    install_resource "IPSqueezableViewController/Resources/backButton.png"
+                    install_resource "IPSqueezableViewController/Resources/backButton@2x.png"
+                    install_resource "IPSqueezableViewController/Resources/invisibleBackButton.png"
+                    install_resource "IPSqueezableViewController/Resources/invisibleBackButton@2x.png"
           
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 if [[ "${ACTION}" == "install" ]]; then

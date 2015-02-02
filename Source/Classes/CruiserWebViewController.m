@@ -688,7 +688,6 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
         pagePins = [[NSMutableArray alloc] initWithCapacity:1];
         self.pins[self.webView.URL] = pagePins;
     }
-
     for (NSNumber *p in pagePins) {
         if ([p isEqualToNumber:position]) {
             return;
@@ -1002,7 +1001,6 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
 
     if (self.addressField) {
         self.addressField.text = self.webView.URL.absoluteString;
-        
     }
     self.title = self.webView.URL.absoluteString;
 }

@@ -1,14 +1,22 @@
 PODS:
-  - CruiserWebViewController (6.0)
+  - CruiserWebViewController (6.1):
+    - IPSqueezableViewController
+  - IPSqueezableViewController (0.0.2)
 
 DEPENDENCIES:
   - CruiserWebViewController (from `../../CruiserWebViewController.podspec`)
+  - IPSqueezableViewController (from `https://raw.githubusercontent.com/Pitometsu/IPSqueezableViewController/0.0.2/IPSqueezableViewController.git`, tag `0.0.2`)
 
 EXTERNAL SOURCES:
   CruiserWebViewController:
     :path: ../../CruiserWebViewController.podspec
+  IPSqueezableViewController:
+    :git: https://raw.githubusercontent.com/Pitometsu/IPSqueezableViewController/0.0.2/IPSqueezableViewController.git
+    :podspec: IPSqueezableViewController.podspec
+    :tag: 0.0.2
 
 SPEC CHECKSUMS:
-  CruiserWebViewController: 153d486dcd4cc0a925ddad63eca03a750a792473
+  CruiserWebViewController: 917d054233cc71ecce02102696dba511caaa3d6a
+  IPSqueezableViewController: 18823bc390905cb027c29b974fd89497231421a2
 
 COCOAPODS: 0.35.0

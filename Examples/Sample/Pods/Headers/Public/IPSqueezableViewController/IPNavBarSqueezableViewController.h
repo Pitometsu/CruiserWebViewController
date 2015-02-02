@@ -1,0 +1,1 @@
+../../../IPSqueezableViewController/Classes/IPNavBarSqueezableViewController.h

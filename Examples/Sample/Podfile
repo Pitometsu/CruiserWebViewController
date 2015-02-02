@@ -2,4 +2,7 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 
-pod 'CruiserWebViewController', :path => '../../CruiserWebViewController.podspec'
+pod 'IPSqueezableViewController', podspec: 'IPSqueezableViewController.podspec',
+    git: 'https://raw.githubusercontent.com/Pitometsu/IPSqueezableViewController/0.0.2/IPSqueezableViewController.git',
+    tag: '0.0.2'
+pod 'CruiserWebViewController', path: '../../CruiserWebViewController.podspec'

@@ -9,6 +9,12 @@
 // CruiserWebViewController
 #define COCOAPODS_POD_AVAILABLE_CruiserWebViewController
 #define COCOAPODS_VERSION_MAJOR_CruiserWebViewController 6
-#define COCOAPODS_VERSION_MINOR_CruiserWebViewController 0
+#define COCOAPODS_VERSION_MINOR_CruiserWebViewController 1
 #define COCOAPODS_VERSION_PATCH_CruiserWebViewController 0
+
+// IPSqueezableViewController
+#define COCOAPODS_POD_AVAILABLE_IPSqueezableViewController
+#define COCOAPODS_VERSION_MAJOR_IPSqueezableViewController 0
+#define COCOAPODS_VERSION_MINOR_IPSqueezableViewController 0
+#define COCOAPODS_VERSION_PATCH_IPSqueezableViewController 2
 

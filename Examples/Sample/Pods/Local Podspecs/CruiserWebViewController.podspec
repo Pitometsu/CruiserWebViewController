@@ -1,5 +1,5 @@
 
-@version = "6.0"
+@version = "6.1"
 
 Pod::Spec.new do |s|
   s.name           = "CruiserWebViewController"
@@ -15,9 +15,9 @@ Pod::Spec.new do |s|
   s.platform       = :ios, '8.0'
   s.requires_arc   = true
 
-  s.dependency 'IPSqueezableViewController', '~> 0.0.1'
-
   s.source_files   = 'Source/Classes/*.{h,m}'
   s.resources      = 'Source/Resources/*.*'
   s.framework      = 'UIKit', 'WebKit'
+  s.dependency 'IPSqueezableViewController'
 end
+
