@@ -1,5 +1,5 @@
 
-@version = "6.1"
+@version = "6.2"
 
 Pod::Spec.new do |s|
   s.name           = "CruiserWebViewController"
@@ -20,4 +20,3 @@ Pod::Spec.new do |s|
   s.framework      = 'UIKit', 'WebKit'
   s.dependency 'IPSqueezableViewController'
 end
-

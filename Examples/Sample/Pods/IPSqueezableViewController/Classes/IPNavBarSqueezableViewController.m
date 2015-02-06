@@ -121,10 +121,6 @@ typedef NS_ENUM(NSInteger, IPNavBarSqueezingStatus) {
                                                               0.f,
                                                               TOOLBAR_HEIGHT,
                                                               0.f);
-    self.triggeringScrollView.scrollIndicatorInsets = UIEdgeInsetsMake(NAVBAR_HEIGHT + kStatusBarHeight,
-                                                                       0.f,
-                                                                       TOOLBAR_HEIGHT,
-                                                                       0.f);
 }
 
 - (void)viewWillDisappear:(BOOL)animated

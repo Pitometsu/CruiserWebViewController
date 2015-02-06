@@ -26,4 +26,13 @@
 
 - (NSString *)squeezedTitle:(NSString *)title; // @"[ %@ ]" by default
 
+#pragma mark - Scroll View Delegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView NS_REQUIRES_SUPER;
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView NS_REQUIRES_SUPER;
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView
+                     withVelocity:(CGPoint)velocity
+              targetContentOffset:(inout CGPoint *)targetContentOffset NS_REQUIRES_SUPER;
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView NS_REQUIRES_SUPER;
+
 @end

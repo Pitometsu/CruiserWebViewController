@@ -139,6 +139,8 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
         this.addressField.rightViewMode = UITextFieldViewModeUnlessEditing;
         this.addressField.leftViewMode  = UITextFieldViewModeAlways;
     };
+    self.downBarItem.enabled = NO;
+    self.upBarItem.enabled   = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -405,7 +407,7 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
                                         stateImage.size.width,
                                         stateImage.size.height);
         [_stateButton setImage:stateImage
-                                forState:UIControlStateNormal];
+                      forState:UIControlStateNormal];
         [self updateStateButton];
     }
     return _stateButton;
@@ -423,7 +425,7 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
         [_webButton setImage:webImage
                     forState:UIControlStateNormal];
         [_webButton addTarget:self
-                       action:@selector(switchSearchService)
+                       action:@selector(switchSearchService:)
              forControlEvents:UIControlEventTouchDown];
     }
     return _webButton;
@@ -892,6 +894,7 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
     self.actionBarItem.enabled = !self.webView.isLoading;
 
     [self updateStateButton];
+    [self updateDownUpItems];
 }
 
 - (void)updatePinBarItems
@@ -918,7 +921,7 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
     self.stateButton.enabled = YES;
 }
 
-- (void)switchSearchService
+- (void)switchSearchService:(id)sender
 {
     switch (self.currentSearchService) {
         case CruiserSearchServicePrimary: {
@@ -989,6 +992,13 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
         [_progressView removeFromSuperview];
         _progressView = nil;
     }
+}
+
+- (void)updateDownUpItems
+{
+    self.downBarItem.enabled = self.webView.scrollView.contentOffset.y + self.webView.scrollView.frame.size.height
+                             < self.webView.scrollView.contentSize.height;
+    self.upBarItem.enabled   = self.webView.scrollView.contentOffset.y > 0.f;
 }
 
 
@@ -1078,6 +1088,12 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
 }
 
 #pragma mark - UIScrollViewDelegate methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [super scrollViewDidScroll:scrollView];
+    [self updateDownUpItems];
+}
 /*
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
                   willDecelerate:(BOOL)decelerate

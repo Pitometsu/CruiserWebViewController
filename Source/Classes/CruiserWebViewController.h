@@ -190,5 +190,7 @@ typedef NS_OPTIONS(NSUInteger, CruiserSupportedWebActions) {
 - (void)pinHere:(id)sender;
 - (void)scrollDown:(id)sender;
 - (void)scrollUp:(id)sender;
+- (void)switchSearchService:(id)sender;
+
 
 @end
