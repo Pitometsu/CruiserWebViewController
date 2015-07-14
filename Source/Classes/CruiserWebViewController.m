@@ -138,6 +138,7 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
         this.addressField.borderStyle = UITextBorderStyleRoundedRect;
         this.addressField.rightViewMode = UITextFieldViewModeUnlessEditing;
         this.addressField.leftViewMode  = UITextFieldViewModeAlways;
+        [this clearProgressViewAnimated:NO];        
     };
     self.downBarItem.enabled = NO;
     self.upBarItem.enabled   = NO;
@@ -1153,6 +1154,7 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
 
     self.addressField.rightViewMode = UITextFieldViewModeNever;
     self.addressField.leftViewMode  = UITextFieldViewModeNever;
+    [self destroyProgressViewIfNeeded];
 }
 
 #pragma mark - UITableViewDataSource Methods
