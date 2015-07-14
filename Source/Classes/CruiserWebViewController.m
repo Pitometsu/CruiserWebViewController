@@ -122,7 +122,7 @@ static NSString *const kHostnameRegex                = @"((\\w)*|([0-9]*)|([-|_]
     [super viewDidLoad];
 
     // IPNavBarSqueezableViewController
-    self.triggeringScrollView = self.webView.scrollView;
+    //self.triggeringScrollView = self.webView.scrollView;
 
     if (self.addressField) {
         self.titleFont = self.addressField.font;
