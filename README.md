@@ -49,7 +49,7 @@ Including:
 
 ## Installation
 
-Available in [Cocoa Pods](http://cocoapods.org/?q=CruiserWebViewController)
+Available in [CocoaPods](http://cocoapods.org/?q=CruiserWebViewController)
 
 ```
 pod 'CruiserWebViewController'
